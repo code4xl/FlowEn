@@ -1,8 +1,9 @@
 import React from 'react';
 import { Routes, Route, Link } from "react-router-dom";
-import { Dashboard, Home, Login, Register, VerifyEmail, Navbar, ErrorPage } from './Components';
+import { Dashboard, Home, Login, Register, VerifyEmail, Navbar, ErrorPage, InitiateWf } from './Components';
 import { useSelector } from 'react-redux';
 import { loginState } from './App/Slice/UserSlice';
+import CreateWorkflow from './Components/Utils/CreateWorkflow';
 
 const RoutesConfig = () => {
     const loggedIn = useSelector(loginState);
@@ -17,6 +18,8 @@ const RoutesConfig = () => {
               loggedIn && (
                 <>
                   <Route path="/dashboard" element={[<Navbar/>,<Dashboard/>]}/>
+                  <Route path="/createWorkflow" element={[<Navbar/>,<CreateWorkflow/>]}/>
+                  <Route path="/initiateWorkflow" element={[<Navbar/>,<InitiateWf/>]}/>
                 </>
               )
             }

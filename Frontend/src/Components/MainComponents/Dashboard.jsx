@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux';
 // import { getAllReceipes, getWishlistReceipes } from '../../Services/Repository/ReceipesRepo';
 import ReceipeList from '../Utils/ReceipeList';
+import CreateWorkflow from '../Utils/CreateWorkflow';
 // import { setWishListReceipes } from '../../App/Slice/ReceipeSlice';
 
 const Dashboard = () => {
@@ -50,6 +51,7 @@ const Dashboard = () => {
       <div className="flex flex-col items-center h-[99vh] overflow-y-auto scrollbar-hide bg-gradient-to-br from-purple-400 to-indigo-700">
         <div>Welcome to the FoodTrek Dashboard...You have been successfully logged in...</div>
         <ReceipeList endpoint={dummyData} type={"1"}/>
+        {/* <CreateWorkflow/> */}
       </div>
         
     </>
