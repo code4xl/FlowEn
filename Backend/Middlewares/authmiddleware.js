@@ -13,16 +13,19 @@ const authMiddleware = asyncHandler(async(req, res, next) => {
         try{
             if(token){
                 const decoded = jwt.verify(token, process.env.SECRET_KEY);
-                console.log(decoded);
+                // console.log(decoded);
                 const [user] = await userService.findUserById(decoded?.userId);
+                // console.log(user);
                 req.user = user;
                 next();
             }
         }catch (err){
             // Token is invalid
+            console.log("Invalid token");
             throw new Error('Invalid token.');
         }
     }else{
+        console.log("Access denied.");
         throw new Error('Access denied. No token provided.');
  
     }       

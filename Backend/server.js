@@ -6,6 +6,7 @@ const dotenv = require("dotenv").config();
 const PORT = process.env.PORT || 4000;
 
 const authRoute = require("./Routes/authRoute.js");
+const workFlowRoute = require("./Routes/worfFlowRoute.js");
 
 const emitter = new EventEmitter();
 emitter.setMaxListeners(15);
@@ -20,6 +21,7 @@ app.get("/", (req,res)=>{
 });
 
 app.use("/api/auth", authRoute);
+app.use("/api/workflow", workFlowRoute);
 
 app.use(notFound);
 app.use(errorHandler);

@@ -20,7 +20,7 @@ const Navbar = () => {
     }
   return (
     <>
-      <div className=" flex w-full sticky top-1 z-50 bg-[#ffffff] drop-shadow-xl h-[70px] bg-gradient-to-br from-yellow-200 to-yellow-100">
+      <div className="flex w-full sticky top-0 z-50 bg-[#ffffff] drop-shadow-xl h-[70px] bg-gradient-to-br from-yellow-200 to-yellow-100">
         <div className="flex w-full px-[1rem] justify-between items-center ">
           <div>
             <img

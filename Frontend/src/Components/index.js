@@ -5,3 +5,5 @@ export {default as Login} from "./MainComponents/Login.jsx";
 export {default as Register} from "./MainComponents/Register.jsx";
 export {default as VerifyEmail} from "./MainComponents/VerifyEmail.jsx";
 export {default as ErrorPage} from "./MainComponents/ErrorPage.jsx";
+export {default as CreateWf} from "./MainComponents/CreateWF.jsx";
+export {default as InitiateWf} from "./MainComponents/InitiateWF.jsx";
