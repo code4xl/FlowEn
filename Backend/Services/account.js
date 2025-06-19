@@ -13,11 +13,12 @@ const registerUser = async (userData) => {
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
   const otp = generateRandomOTP();
+  const usersTable = "fe_users"
 
   // Insert user into the database
   // console.log(supabase);
   const { data, error } = await supabase
-    .from("users")
+    .from(usersTable)
     .insert([
       {
         name,
@@ -42,7 +43,7 @@ const registerUser = async (userData) => {
 const loginUser = async (email_id, password) => {
   // Fetch the user by email
   const { data, error } = await supabase
-    .from("users")
+    .from(usersTable)
     .select("u_id, name, email, password, mobile, e_verified, is_active, verified, role_id, isNew, user_roles(name)")
     .eq("email", email_id);
 
@@ -70,7 +71,7 @@ const loginUser = async (email_id, password) => {
 
 const getUserById = async (user_id) => {
   const { data, error } = await supabase
-    .from("users")
+    .from(usersTable)
     .select("*")
     .eq("user_id", user_id);
 
@@ -81,7 +82,7 @@ const getUserById = async (user_id) => {
 
 const getAllUsers = async () => {
   const { data, error } = await supabase
-    .from("users")
+    .from(usersTable)
     .select("*, roles(role_name)");
 
   if (error) throw error;
@@ -122,7 +123,7 @@ const validateGmail = async (userId, otp) => {
 
     // console.log(fiveMinutesAgo);
     const { data: user, error: fetchError } = await supabase
-      .from("users")
+      .from(usersTable)
       .select("*")
       .eq("u_id", userId)
       .eq("otp", otp)
@@ -135,7 +136,7 @@ const validateGmail = async (userId, otp) => {
     } else {
       // Update the user's `is_verified` status to true
       const { error: updateError } = await supabase
-        .from("users")
+        .from(usersTable)
         .update({ e_verified: true })
         .eq("u_id", userId);
 
@@ -155,7 +156,7 @@ const resendOTP = async (userId) => {
 
     // Update the OTP and its created time in the database
     const { error: updateError } = await supabase
-      .from("users")
+      .from(usersTable)
       .update({ otp, otp_created_at: new Date().toISOString() })
       .eq("user_id", userId);
 
@@ -163,7 +164,7 @@ const resendOTP = async (userId) => {
 
     // Fetch the user's email to resend the OTP
     const { data: user, error: fetchError } = await supabase
-      .from("users")
+      .from(usersTable)
       .select("email_id")
       .eq("user_id", userId)
       .single();
@@ -179,161 +180,95 @@ const resendOTP = async (userId) => {
   }
 };
 
-const forgotPasswords = async (email) => {
-  try {
-    // Fetch the user by email
-    const { data: user, error: fetchError } = await supabase
-      .from("users")
-      .select("user_id, email_id")
-      .eq("email_id", email)
-      .single();
+// const forgotPasswords = async (email) => {
+//   try {
+//     // Fetch the user by email
+//     const { data: user, error: fetchError } = await supabase
+//       .from(usersTable)
+//       .select("user_id, email_id")
+//       .eq("email_id", email)
+//       .single();
 
-    if (fetchError) throw fetchError;
-    if (!user) throw new Error("No user found with this email");
+//     if (fetchError) throw fetchError;
+//     if (!user) throw new Error("No user found with this email");
 
-    // Generate a password reset token
-    const resetToken = crypto.randomBytes(32).toString("hex");
-    const tokenExpiry = new Date(Date.now() + 30 * 60 * 1000).toISOString(); // 30 minutes expiry
+//     // Generate a password reset token
+//     const resetToken = crypto.randomBytes(32).toString("hex");
+//     const tokenExpiry = new Date(Date.now() + 30 * 60 * 1000).toISOString(); // 30 minutes expiry
 
-    // Update the reset token and expiry in the database
-    const { error: updateError } = await supabase
-      .from("users")
-      .update({ reset_token: resetToken, reset_token_expiry: tokenExpiry })
-      .eq("user_id", user.user_id);
+//     // Update the reset token and expiry in the database
+//     const { error: updateError } = await supabase
+//       .from(usersTable)
+//       .update({ reset_token: resetToken, reset_token_expiry: tokenExpiry })
+//       .eq("user_id", user.user_id);
 
-    if (updateError) throw updateError;
+//     if (updateError) throw updateError;
 
-    // Construct the reset password link
-    const resetLink = `https://your-frontend-url.com/reset-password?token=${resetToken}`;
+//     // Construct the reset password link
+//     const resetLink = `https://your-frontend-url.com/reset-password?token=${resetToken}`;
 
-    // Send the reset link to the user's email
-    await sendPasswordResetEmail(user.email_id, resetLink);
+//     // Send the reset link to the user's email
+//     await sendPasswordResetEmail(user.email_id, resetLink);
 
-    return { message: "Password reset link sent successfully" };
-  } catch (error) {
-    throw new Error(error.message);
-  }
-};
+//     return { message: "Password reset link sent successfully" };
+//   } catch (error) {
+//     throw new Error(error.message);
+//   }
+// };
 
-async function sendPasswordResetEmail(email, resetLink) {
-  try {
-    const mailResponse = await mailSender(
-      email,
-      "Reset Your Password",
-      `<p>Click the link below to reset your password:</p>
-      <a href="${resetLink}">${resetLink}</a>
-      <p>This link will expire in 30 minutes.</p>`
-    );
-    // console.log(
-    //   "Password reset email sent successfully:",
-    //   mailResponse.response
-    // );
-  } catch (error) {
-    console.error("Error sending password reset email:", error);
-    throw error;
-  }
-}
+// async function sendPasswordResetEmail(email, resetLink) {
+//   try {
+//     const mailResponse = await mailSender(
+//       email,
+//       "Reset Your Password",
+//       `<p>Click the link below to reset your password:</p>
+//       <a href="${resetLink}">${resetLink}</a>
+//       <p>This link will expire in 30 minutes.</p>`
+//     );
+//     // console.log(
+//     //   "Password reset email sent successfully:",
+//     //   mailResponse.response
+//     // );
+//   } catch (error) {
+//     console.error("Error sending password reset email:", error);
+//     throw error;
+//   }
+// }
 
-const resetPassword = async (token, newPassword) => {
-  try {
-    // Validate the token and check expiry
-    const { data: user, error: fetchError } = await supabase
-      .from("users")
-      .select("user_id")
-      .eq("reset_token", token)
-      .gte("reset_token_expiry", new Date().toISOString())
-      .single();
+// const resetPassword = async (token, newPassword) => {
+//   try {
+//     // Validate the token and check expiry
+//     const { data: user, error: fetchError } = await supabase
+//       .from(usersTable)
+//       .select("user_id")
+//       .eq("reset_token", token)
+//       .gte("reset_token_expiry", new Date().toISOString())
+//       .single();
 
-    if (fetchError) throw fetchError;
-    if (!user) throw new Error("Invalid or expired token");
+//     if (fetchError) throw fetchError;
+//     if (!user) throw new Error("Invalid or expired token");
 
-    // Hash the new password
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+//     // Hash the new password
+//     const saltRounds = 10;
+//     const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
 
-    // Update the user's password and clear the token
-    const { error: updateError } = await supabase
-      .from("users")
-      .update({
-        password: hashedPassword,
-        reset_token: null,
-        reset_token_expiry: null,
-      })
-      .eq("user_id", user.user_id);
+//     // Update the user's password and clear the token
+//     const { error: updateError } = await supabase
+//       .from(usersTable)
+//       .update({
+//         password: hashedPassword,
+//         reset_token: null,
+//         reset_token_expiry: null,
+//       })
+//       .eq("user_id", user.user_id);
 
-    if (updateError) throw updateError;
+//     if (updateError) throw updateError;
 
-    return { message: "Password reset successfully" };
-  } catch (error) {
-    throw new Error(error.message);
-  }
-};
-
-const getAllProjectsAndCompaniesByStatus = async (status) => {
-  try {
-    const statusMap = {
-      0: "pending",
-      1: "approved",
-      2: "rejected"
-    };
-
-    // Fetch projects based on status
-    const { data: projects, error: projectError } = await supabase
-      .from("investment_project")
-      .select(`
-        ip_id, 
-        name, 
-        description, 
-        amount_required, 
-        amount_collected, 
-        exp_roi, 
-        estimated_completion_date, 
-        investment_model, 
-        created_at, 
-        status,
-        users!investment_project_created_by_fkey(u_id, name, role_id, verified)
-      `)
-      .eq("status", status);
-
-    if (projectError) throw projectError;
-
-    // Add flag to each project
-    const projectsWithFlag = projects.map((project) => ({
-      ...project,
-      flag: statusMap[project.status] || "unknown"
-    }));
-
-    // Fetch companies based on status
-    const { data: companies, error: companyError } = await supabase
-      .from("users") // Assuming this is the companies table
-      .select(`
-        u_id, 
-        name, 
-        verified, 
-        role_id, 
-        company_details (company_id, registration_no, industry, location)
-      `)
-      .eq("role_id", 2) // Role 2 represents companies
-      .eq("verified", status === 1); // Approved companies are verified
-
-    if (companyError) throw companyError;
-
-    // Add flag to each company
-    const companiesWithFlag = companies.map((company) => ({
-      ...company,
-      flag: status === 1 ? "approved" : status === 0 ? "pending" : "rejected"
-    }));
-
-    return { 
-      status: true, 
-      message: "Projects and companies fetched successfully", 
-      data: { projects: projectsWithFlag, companies: companiesWithFlag } 
-    };
-  } catch (err) {
-    console.error("Error fetching projects and companies:", err.message);
-    return { status: false, message: "Error fetching data", error: err.message };
-  }
-};
+//     return { message: "Password reset successfully" };
+//   } catch (error) {
+//     throw new Error(error.message);
+//   }
+// };
 
 module.exports = {
   registerUser,
@@ -342,6 +277,6 @@ module.exports = {
   getAllUsers,
   validateGmail,
   resendOTP,
-  forgotPasswords,
-  resetPassword,
+  // forgotPasswords,
+  // resetPassword,
 };
