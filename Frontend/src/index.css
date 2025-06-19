@@ -1,73 +1,140 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Yatra+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Yatra+One&display=swap');
+@import 'tailwindcss';
+@plugin "tailwindcss-animate";
 
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@theme {
+  --font-roboto: 'Roboto', 'sans-serif';
+  --font-raleway: 'Raleway', 'sans-serif';
+  --font-poppins: 'Poppins', 'sans-serif';
+  --color-dark-blue: #1e2251;
+  --color-green: #13ec00;
+  --color-avocado: #5c8001;
+  --color-superiory-blue: #6ea4bf;
+  --color-ebony: #626c66;
+  --color-light-blue: #a7cecb;
+  --color-madder: #b10f2e;
+  --color-light-gray: #e5e5e5;
+  --color-yellow: #ffd700;
+  --color-rose: #ff2e63;
+  --color-red: #ff0000;
+  --color-purple: #9747ff;
+  --color-sky-blue: #4facfe;
+  --color-indigo: #4f00bc;
+  --color-teal: #08a9bb;
+  --color-cerulean: #06b6d4;
+  --color-logo-blue: #00f2fe;
+  --ease-fluid: cubic-bezier(0.3, 0, 0, 1);
+  --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+:root[data-theme="light"] {
+  --bg-primary: #ffffff;         /* pure white background */
+  --bg-secondary: #f5f5f5;       /* very light gray for contrast sections */
+  --text-primary: #000000;       /* pure black for primary text */
+  --text-secondary: #4b4b4b;     /* dark gray for secondary text */
+  --accent-color: #0fdbff;       /* Persian blue for branding elements */
+  --highlight-color: #e0e0e0;    /* light gray for highlights */
+  --border-color: #dcdcdc;       /* subtle gray borders */
+  --button-bg: #1e2a78;          /* primary button background */
+  --button-text: #ffffff;        /* white button text */
+  --button-hover: #162061;       /* darker Persian blue on hover */
+  --card-bg: #ffffff;            /* white card background */
+  --input-bg: #ffffff;           /* white input field background */
+  --input-border: #cccccc;       /* input field border */
+  --shadow-color: rgba(0, 0, 0, 0.08); /* soft shadow */
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+
+:root[data-theme="dark"] {
+  --bg-primary: #000000;         /* pure black background */
+  --bg-secondary: #1a1a1a;       /* near-black for secondary sections */
+  --text-primary: #ffffff;       /* white for primary text */
+  --text-secondary: #cfcfcf;     /* light gray for secondary text */
+  --accent-color: #0fdbff;       /* Persian blue remains brand accent */
+  --highlight-color: #333333;    /* dark gray highlight */
+  --border-color: #2a2a2a;       /* dark border lines */
+  --button-bg: #1e2a78;          /* primary button background */
+  --button-text: #ffffff;        /* white button text */
+  --button-hover: #3a46a8;       /* lighter Persian blue hover */
+  --card-bg: #121212;            /* slightly lighter black for cards */
+  --input-bg: #1a1a1a;           /* input fields on dark bg */
+  --input-border: #2d2d2d;       /* input border on dark theme */
+  --shadow-color: rgba(255, 255, 255, 0.05); /* soft glow/shadow */
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
-  a:hover {
-    color: #747bff;
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
-  button {
-    background-color: #f9f9f9;
+}
+
+@layer utilities {
+  .fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  .fade-out {
+    animation: fadeOut 0.5s ease-in-out;
+  }
+  .glow {
+    animation: glow 3s infinite ease-in-out;
+  }
+  .gradient-glow {
+    animation: gradient 15s infinite alternate;
+  }
+  .pulse {
+    animation: pulse 2s infinite;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.8);
+  }
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.8);
   }
 }

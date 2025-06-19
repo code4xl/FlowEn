@@ -1,31 +1,34 @@
-import axios from "axios";
+//This will create an axios instance so no need to create and call the axios functions everywhere just call the function and pass data to this Connector object.
+import axios from 'axios';
+const apiUrl = import.meta.env.VITE_API_BASE_URL;
+// Create axios instance with a base URL
+export const axiosInstance = axios.create({
+  baseURL: apiUrl || 'http://localhost:3000',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-export const axiosInstance = axios.create({});
-
+// API Connector Function
 export const apiConnector = (method, url, bodyData, headers, params) => {
-  console.log("apicon : ", params);
-  console.log("apiconBD : ", bodyData);
-
+  console.log('API Connector: ', method, url, bodyData, headers, params);
   const accountData = JSON.parse(localStorage.getItem('account'));
-  console.log("con" + params);
   let token;
 
   if (accountData) {
     token = accountData.token;
   }
 
-  headers = headers || {}; // Initialize headers as an empty object if not provided
+  headers = headers || {};
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
-    // console.log("in");
   }
-  console.log(bodyData || "no body data");
-
+  console.log('byee');
   return axiosInstance({
-    method: method,
-    url: url,
+    method,
+    url,
     data: bodyData || null,
-    headers: headers,
+    headers,
     params: params || null,
   });
 };

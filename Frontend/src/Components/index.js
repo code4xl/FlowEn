@@ -1,9 +1,3 @@
-export {default as Home} from "./MainComponents/Home.jsx";
-export {default as Dashboard} from "./MainComponents/Dashboard.jsx";
-export {default as Navbar} from "./MainComponents/Navbar.jsx";
-export {default as Login} from "./MainComponents/Login.jsx";
-export {default as Register} from "./MainComponents/Register.jsx";
-export {default as VerifyEmail} from "./MainComponents/VerifyEmail.jsx";
-export {default as ErrorPage} from "./MainComponents/ErrorPage.jsx";
-export {default as CreateWf} from "./MainComponents/CreateWF.jsx";
-export {default as InitiateWf} from "./MainComponents/InitiateWF.jsx";
+export { default as Login } from './common/Login';
+export { default as VerifyEmail } from './common/VerifyEmail';
+export { default as HeroPage } from './common/HeroPage';

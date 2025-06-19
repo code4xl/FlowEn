@@ -1,10 +1,10 @@
-import { configureStore } from "@reduxjs/toolkit";
-import UserSlice from "./Slice/UserSlice";
+import { configureStore } from '@reduxjs/toolkit';
+import DashboardSlice from './DashboardSlice.js';
 
 const Store = configureStore({
-    reducer: {
-        userState: UserSlice,
-    }
+  reducer: {
+    dashboard: DashboardSlice,
+  },
 });
 
 export default Store;

@@ -1,32 +1,60 @@
 import React from 'react';
-import { Routes, Route, Link } from "react-router-dom";
-import { Dashboard, Home, Login, Register, VerifyEmail, Navbar, ErrorPage, InitiateWf } from './Components';
+import { Routes, Route } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { loginState } from './App/Slice/UserSlice';
-import CreateWorkflow from './Components/Utils/CreateWorkflow';
+import { HeroPage, Login, VerifyEmail } from './components';
+import { dashboardMenuState } from './app/DashboardSlice';
+import { isUserLoggedIn } from './app/DashboardSlice';
+
+import NavBar from './components/protected/Dashboard/NavBar';
+import Sidebar from './components/utils/Sidebar';
+import Dashboard from './components/protected/Dashboard/Dashboard';
+import CreateWorkflow from './components/protected/CreateWF/CreateWorkflow';
+import ExecuteWorkflow from './components/protected/ExecuteWF/ExecuteWorkflow';
+import ViewWorkflow from './components/protected/ViewWF/ViewWorkflow';
 
 const RoutesConfig = () => {
-    const loggedIn = useSelector(loginState);
-  return (
-    <>
-        <Routes>
-            <Route path="/" element={<Home/>}/>
-            <Route path="/register" element={<Register/>}/>
-            <Route path="/login" element={<Login/>}/>
-            <Route path="/verifyEmail" element={<VerifyEmail/>}/>
-            {
-              loggedIn && (
-                <>
-                  <Route path="/dashboard" element={[<Navbar/>,<Dashboard/>]}/>
-                  <Route path="/createWorkflow" element={[<Navbar/>,<CreateWorkflow/>]}/>
-                  <Route path="/initiateWorkflow" element={[<Navbar/>,<InitiateWf/>]}/>
-                </>
-              )
-            }
-            <Route path="*" element={<ErrorPage/>}/>
-        </Routes>
-    </>
-  )
-}
+  const isLoggedIn = useSelector(isUserLoggedIn);
+  const ifDMenuState = useSelector(dashboardMenuState);
+  if (!isLoggedIn) {
+    return (
+      <Routes>
+        <Route
+          path="/"
+          key={'home'}
+          className="transition-all scrollbar-hide"
+          element={[<HeroPage key={'HeroPage'} />]}
+        />
+        <Route
+          path="/login"
+          className="transition-all scrollbar-hide"
+          element={[<Login />]}
+        />
+        <Route
+          path="/verify-email"
+          className="transition-all scrollbar-hide"
+          element={[<VerifyEmail />]}
+        />
+      </Routes>
+    );
+  } else {
+    return (
+      <div
+        className={`w-full h-[100vh] bg-[var(--bg-primary)] flex flex-col overflow-y-auto scrollbar-hide`}
+      >
+        <Sidebar isOpen={ifDMenuState} />
+        <NavBar />
+        <div className={`${ifDMenuState && 'pl-[4rem]'} `}>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/create" element={<CreateWorkflow />} />
+            <Route path="/execute" element={<ExecuteWorkflow />} />
+            <Route path="/view" element={<ViewWorkflow />} />
+          </Routes>
+        </div>
+      </div>
+    );
+  }
+};
 
-export default RoutesConfig
+export default RoutesConfig;

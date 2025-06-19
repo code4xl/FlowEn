@@ -1,14 +1,13 @@
-import { BaseURL } from "../../appsettings.js";
+//All the API endpoints will be declared here and then this will be used in entire frontend to access the endpoints...
+const BaseURL = import.meta.env.VITE_API_BASE_URL;
 
-export const userEndpoints = {
-    LOGIN_API: BaseURL + "auth/login",
-    REGISTER_API: BaseURL + "auth/register",
-    VALIDATE_GMAIL: BaseURL + "auth/authenticateMail",
-}
-export const workFlowEndpoints = {
-    CREATE_WF: BaseURL + "workflow/create",
-    FETCH_NODES: BaseURL + "workflow/fetch-nodes",
-    FETCH_LAST_WF_ID: BaseURL + "workflow/lastWorkflowId",
-    FETCH_WF_LIST: BaseURL + "workflow/wfList",
-    FETCH_WF_DETAILS: BaseURL + "workflow/wfDetails/",
-}
+export const authEndpoints = {
+  LOGIN_API: BaseURL + 'auth/login',
+  REGISTER: BaseURL + 'auth/register',
+  VALIDATE_GMAIL: BaseURL + 'auth/validate',
+  GOOGLE_SIGN_IN: BaseURL + 'auth/sign-in-google',
+};
+
+export const uploadEndPoints = {
+  UPLOAD: BaseURL + 'upload/',
+};

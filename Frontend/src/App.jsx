@@ -1,12 +1,7 @@
-import React from 'react';
 import RoutesConfig from './RoutesConfig';
-function App() {
 
-  return (
-    <div>
-      <RoutesConfig/>
-    </div>
-  )
+function App() {
+  return <RoutesConfig />;
 }
 
-export default App
+export default App;

@@ -11,9 +11,6 @@ node_modules
 dist
 dist-ssr
 *.local
-Backend/node_modules/
-.env
-appsettings.js
 
 # Editor directories and files
 .vscode/*
@@ -26,4 +23,4 @@ appsettings.js
 *.sln
 *.sw?
 
-FrontendOld/
+.env
