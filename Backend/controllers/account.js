@@ -8,6 +8,33 @@ const register = async (req, res) => {
       res.status(400).json({ success: false, message: error.message });
     }
   };
+
+  const logout = async (req, res) => {
+    try {
+      const token = req.token; // Token stored in middleware
+      
+      if (!token) {
+        return res.status(400).json({ 
+          success: false, 
+          message: 'No token provided' 
+        });
+      }
+
+      // Blacklist the token
+      authService.blacklistToken(token);
+      
+      res.status(200).json({ 
+        success: true, 
+        message: 'Logged out successfully' 
+      });
+    } catch (error) {
+      console.log("Error in logout controller", error);
+      res.status(500).json({ 
+        success: false, 
+        message: 'Logout failed' 
+      });
+    }
+};
   
   const login = async (req, res) => {
     try {
@@ -89,4 +116,4 @@ const resendUserOtp = async (req, res) => {
 // };
 
 
-module.exports = { register, login, getUserInfo, getAllUsers, getAllRoles, validateUseEmail, resendUserOtp, getAllUserByRoles };
+module.exports = { register, login, logout, getUserInfo, getAllUsers, getAllRoles, validateUseEmail, resendUserOtp, getAllUserByRoles };
