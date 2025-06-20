@@ -1,12 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 const localData = JSON.parse(localStorage.getItem('account'));
 const Dstate = JSON.parse(localStorage.getItem('dState'));
-const theme = localStorage.getItem('theme') || 'light';
+const theme = localStorage.getItem('theme') || 'dark';
 const initialState = {
   dashboardMenuState: true,
   dashboardFeature: Dstate ? Dstate : 'Home',
   account: localData ? localData : {id: "12", uname:"haresh", email:"kuradeharesh4002@gmail.com"},
-  isLoggedIn: localData ? localData.isLoggedIn : true,
+  isLoggedIn: localData ? localData.isLoggedIn : false,
   profileData: [],
   theme: theme,
 };
