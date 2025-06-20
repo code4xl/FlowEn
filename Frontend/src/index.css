@@ -27,6 +27,8 @@
   --color-logo-blue: #00f2fe;
   --ease-fluid: cubic-bezier(0.3, 0, 0, 1);
   --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
+
+  --animate-gradient: gradient 8s linear infinite
 }
 
 :root[data-theme="light"] {
@@ -124,8 +126,11 @@
   0% {
     background-position: 0% 50%;
   }
-  100% {
+  50% {
     background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
 

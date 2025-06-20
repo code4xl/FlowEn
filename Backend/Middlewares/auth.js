@@ -2,20 +2,28 @@ const jwt = require('jsonwebtoken');
 const authService = require('../services/auth');
 
 const verifyToken = (req, res, next) => {
-    const token = req.header('Authorization') && req.header('Authorization').split(' ')[1]; // Get token from request header
-    //console.log(token); // Debugging the token in the console
+    const authHeader = req.header('Authorization');
+    const token = authHeader && authHeader.split(' ')[1]; // Get token from Bearer token
 
-    if (!token) return res.status(401).json({ error: 'Access Denied No Token Provided.' });
+    if (!token) {
+        return res.status(401).json({ 
+            success: false, 
+            error: 'Access Denied. No Token Provided.' 
+        });
+    }
 
     try {
-        // Verify the token using the secret key stored in environment variables
+        // Verify the token using the auth service (includes blacklist check)
         const verified = authService.verifyToken(token);
         req.user = verified; // Attach the verified user data to the request object
-        // console.log("clear");
+        req.token = token; // Store token in request for logout functionality
         next(); // Proceed to the next middleware or route handler
     } catch (err) {
-        console.log(err); // Log error for debugging
-        res.status(403).json({ error: 'Invalid Token' }); // Invalid token
+        console.log('Token verification error:', err.message);
+        res.status(403).json({ 
+            success: false, 
+            error: 'Invalid or expired token' 
+        });
     }
 };
 

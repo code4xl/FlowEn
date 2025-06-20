@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Menu,
   X,
@@ -12,766 +12,890 @@ import {
   Settings,
   Moon,
   Sun,
-} from 'lucide-react';
-import { selectTheme, setTheme } from '../../app/DashboardSlice';
+  Workflow,
+  Bot,
+  Database,
+  Clock,
+  Play,
+  ArrowRight,
+  Sparkles,
+  Brain,
+  Network,
+  GitBranch,
+  Cpu,
+  Shield,
+  BarChart3,
+} from "lucide-react";
+import { selectTheme, setTheme } from "../../app/DashboardSlice";
+import GradientText from "../bits/GradientText";
+import ClickSpark from "../bits/ClickSpark";
+import BlurText from "../bits/BlurText";
 
 export default function HeroPage() {
   const theme = useSelector(selectTheme);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("hero");
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
+    const newTheme = theme === "light" ? "dark" : "light";
     dispatch(setTheme({ theme: newTheme }));
-    document.documentElement.setAttribute('data-theme', newTheme);
+    document.documentElement.setAttribute("data-theme", newTheme);
   };
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
+
+      // Update active section based on scroll
+      const sections = ["hero", "features", "how-it-works", "testimonials"];
+      const current = sections.find((section) => {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          return rect.top <= 100 && rect.bottom >= 100;
+        }
+        return false;
+      });
+      if (current) setActiveSection(current);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    document.documentElement.setAttribute("data-theme", "dark");
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const features = [
+    {
+      icon: <GitBranch className="w-8 h-8" />,
+      title: "Drag & Drop Builder",
+      description:
+        "Visually design complex workflows with our intuitive drag-and-drop interface. No coding required.",
+    },
+    {
+      icon: <Bot className="w-8 h-8" />,
+      title: "LLM Agent Integration",
+      description:
+        "Connect powerful AI models like GPT-4, Claude, and custom agents to automate intelligent tasks.",
+    },
+    {
+      icon: <Database className="w-8 h-8" />,
+      title: "RAG & Knowledge Base",
+      description:
+        "Integrate your documents and data sources for context-aware AI responses and decisions.",
+    },
+    {
+      icon: <Clock className="w-8 h-8" />,
+      title: "Smart Triggers & Scheduling",
+      description:
+        "Set up automatic execution based on time, events, webhooks, or custom conditions.",
+    },
+    {
+      icon: <Shield className="w-8 h-8" />,
+      title: "Enterprise Security",
+      description:
+        "Bank-grade security with SOC 2 compliance, encryption, and audit trails for peace of mind.",
+    },
+  ];
+
+  const steps = [
+    {
+      number: "01",
+      title: "Design Your Workflow",
+      description:
+        "Use our visual builder to create sophisticated automation workflows in minutes, not hours.",
+      icon: <Workflow className="w-12 h-12" />,
+    },
+    {
+      number: "02",
+      title: "Configure AI Agents",
+      description:
+        "Connect LLM models, set up knowledge bases, and define intelligent decision points.",
+      icon: <Brain className="w-12 h-12" />,
+    },
+    {
+      number: "03",
+      title: "Execute & Scale",
+      description:
+        "Deploy your workflows and watch them run automatically, handling thousands of tasks seamlessly.",
+      icon: <Cpu className="w-12 h-12" />,
+    },
+  ];
+
+  const testimonials = [
+    {
+      name: "Sarah Chen",
+      role: "Head of Operations, TechCorp",
+      avatar: "SC",
+      content:
+        "This platform reduced our manual processes by 80%. The AI agents handle complex decision-making that would take our team hours.",
+    },
+    {
+      name: "Marcus Rodriguez",
+      role: "CTO, DataFlow Solutions",
+      avatar: "MR",
+      content:
+        "The RAG integration is phenomenal. Our workflows now have access to our entire knowledge base, making responses incredibly accurate.",
+    },
+    {
+      name: "Elena Kowalski",
+      role: "Product Manager, InnovateLab",
+      avatar: "EK",
+      content:
+        "Building workflows is now as easy as drawing a flowchart. Our non-technical team can create powerful automations independently.",
+    },
+  ];
+
   return (
-    <div className="min-h-screen flex flex-col ">
-      {/* Navbar */}
-      <header
-        className={`fixed w-full z-30 transition-all duration-300 bg-[var(--bg-secondary)] h-[4rem] ${ scrolled ? " shadow-md" : ""}`}
+    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
+      <ClickSpark
+        sparkColor="#0fdbff"
+        sparkSize={32}
+        sparkRadius={90}
+        sparkCount={12}
+        duration={400}
+        extraScale={1.3}
       >
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center">
-              <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-teal-500 text-transparent bg-clip-text">
-                Your Brand
-              </span>
-            </div>
+        {/* Sticky Header */}
+        <header
+          className={`fixed w-full z-50 transition-all duration-300 ${
+            scrolled
+              ? "bg-[var(--bg-primary)]/95 backdrop-blur-md shadow-lg border-b border-[var(--border-color)]"
+              : "bg-transparent"
+          }`}
+        >
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center py-4">
+              {/* Logo */}
+              <div className="flex items-center space-x-2">
+                <div className="w-10 h-10 bg-gradient-to-br from-[var(--accent-color)] to-purple-500 rounded-lg flex items-center justify-center">
+                  <Workflow className="w-6 h-6 text-white" />
+                </div>
+                <span className="text-xl font-bold">
+                  <GradientText>FlowAI</GradientText>
+                </span>
+              </div>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-8">
-              <a
-                href="#features"
-                className="text-[var(--text-primary)] hover:text-blue-600 transition-colors"
-              >
-                Features
-              </a>
-              <a
-                href="#about"
-                className="text-[var(--text-primary)] hover:text-blue-600 transition-colors"
-              >
-                About
-              </a>
-              <a
-                href="#contact"
-                className="text-[var(--text-primary)] hover:text-blue-600 transition-colors"
-              >
-                Contact
-              </a>
-              <a
-                href="/login"
-                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
-              >
-                Get Started
-              </a>
-            </nav>
-            <div
-            className="flex items-center justify-center p-1 cursor-pointer"
-            onClick={toggleTheme}
-          >
-            {theme === 'light' ? (
-              <Moon className="w-[2.5rem] text-[var(--accent-color)] rounded-xl" />
-            ) : (
-              <Sun className="w-[2.5rem] text-[var(--accent-color)] rounded-xl" />
-            )}
-          </div>
-
-            {/* Mobile menu button */}
-            <div className="md:hidden">
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-gray-700 flex flex-row items-center justify-center"
-              >
-              <div
-            className="flex items-center justify-center p-1 cursor-pointer"
-            onClick={toggleTheme}
-          >
-            {theme === 'light' ? (
-              <Moon className="w-[2.5rem] text-[var(--accent-color)] rounded-xl" />
-            ) : (
-              <Sun className="w-[2.5rem] text-[var(--accent-color)] rounded-xl" />
-            )}
-          </div>
-                {isMenuOpen ? (
-                  <X className="h-6 w-6" />
-                ) : (
-                  <Menu className="h-6 w-6" />
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-[var(--bg-primary)]">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <a
-                href="#features"
-                className="block px-3 py-2 rounded-md text-base font-medium text-[var(--text-primary)] hover:text-blue-600 hover:bg-gray-50"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Features
-              </a>
-              <a
-                href="#about"
-                className="block px-3 py-2 rounded-md text-base font-medium text-[var(--text-primary)] hover:text-blue-600 hover:bg-gray-50"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                About
-              </a>
-              <a
-                href="#contact"
-                className="block px-3 py-2 rounded-md text-base font-medium text-[var(--text-primary)] hover:text-blue-600 hover:bg-gray-50"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Contact
-              </a>
-              <a
-                href="#"
-                className="block px-3 py-2 rounded-md text-base font-medium bg-blue-600 text-white hover:bg-blue-700"
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  navigate('/login');
-                }}
-              >
-                Get Started
-              </a>
-            </div>
-          </div>
-        )}
-      </header>
-
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 md:pt-36 md:pb-24 bg-gradient-to-br from-[var(--bg-primary)] to-[var(--bg-secondary)]">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between">
-            <div className="md:w-1/2 md:pr-8 mb-10 md:mb-0">
-              <div className="animate-fade-in-up">
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[var(--text-primary)] leading-tight mb-4">
-                  Welcome to{' '}
-                  <span className="bg-gradient-to-r from-blue-600 to-teal-500 text-transparent bg-clip-text">
-                    Your New Project
-                  </span>
-                </h1>
-                <p className="text-lg md:text-xl text-[var(--text-secondary)] mb-8">
-                  This beautiful landing page was generated with quikfrontend.
-                  Customize it to build something amazing.
-                </p>
-                <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                  <button
-                    onClick={() => {
-                      navigate('/login');
-                    }}
-                    className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-all transform hover:scale-105 flex items-center justify-center"
+              {/* Desktop Navigation */}
+              <nav className="hidden md:flex items-center space-x-8">
+                {[
+                  { name: "Features", href: "#features" },
+                  { name: "How it Works", href: "#how-it-works" },
+                  { name: "Testimonials", href: "#testimonials" },
+                ].map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    className={`text-[var(--text-secondary)] hover:text-[var(--accent-color)] transition-colors font-medium ${
+                      activeSection === item.href.slice(1)
+                        ? "text-[var(--accent-color)]"
+                        : ""
+                    }`}
                   >
-                    Get Started
-                    <ChevronRight className="ml-2 h-4 w-4" />
-                  </button>
-                  <button className="border border-gray-300 text-[var(--text-secondary)] px-6 py-3 rounded-md hover:bg-gray-50 transition-all flex items-center justify-center">
-                    Learn More
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className="md:w-1/2 animate-float">
-              <div className="bg-white rounded-xl shadow-xl p-6 border border-gray-200">
-                <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-blue-500 to-teal-400 aspect-video flex items-center justify-center">
-                  <div className="text-white text-4xl font-bold">
-                    Your Product
-                  </div>
-                  <div className="absolute -bottom-6 -right-6 h-24 w-24 bg-yellow-400 rounded-full opacity-50"></div>
-                  <div className="absolute top-4 left-4 h-12 w-12 bg-white rounded-full opacity-20"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+                    {item.name}
+                  </a>
+                ))}
+                <button
+                  onClick={toggleTheme}
+                  className="p-2 rounded-lg hover:bg-[var(--highlight-color)] transition-colors"
+                >
+                  {theme === "light" ? (
+                    <Moon className="w-5 h-5 text-[var(--accent-color)]" />
+                  ) : (
+                    <Sun className="w-5 h-5 text-[var(--accent-color)]" />
+                  )}
+                </button>
+                <button
+                  onClick={() => navigate("/login")}
+                  className="px-4 py-2 text-[var(--accent-color)] border border-[var(--accent-color)] rounded-lg hover:bg-[var(--accent-color)] hover:text-white transition-all"
+                >
+                  Login
+                </button>
+                <button
+                  onClick={() => navigate("/login")}
+                  className="px-6 py-2 bg-[var(--accent-color)] text-white rounded-lg hover:bg-[var(--button-hover)] transition-all transform hover:scale-105 shadow-lg"
+                >
+                  Try Free
+                </button>
+              </nav>
 
-      {/* Features Section */}
-      <section id="features" className="py-16 md:py-24 bg-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Amazing Features
-            </h2>
-            <p className="text-lg text-gray-600">
-              Everything you need to showcase your product or service.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 duration-300">
-              <div className="mb-4">
-                <Zap className="h-8 w-8 text-blue-500" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Lightning Fast</h3>
-              <p className="text-gray-600">
-                Optimized for speed and performance right out of the box.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 duration-300">
-              <div className="mb-4">
-                <Code className="h-8 w-8 text-blue-500" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Clean Code</h3>
-              <p className="text-gray-600">
-                Built with modern best practices for maintainable code.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 duration-300">
-              <div className="mb-4">
-                <Settings className="h-8 w-8 text-blue-500" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Customizable</h3>
-              <p className="text-gray-600">
-                Easily modify all aspects to match your brand identity.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 duration-300">
-              <div className="mb-4">
-                <CheckCircle className="h-8 w-8 text-blue-500" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Reliable</h3>
-              <p className="text-gray-600">
-                Thoroughly tested components you can depend on.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* About Section */}
-      <section
-        id="about"
-        className="py-16 md:py-24 bg-gradient-to-br from-blue-50 to-teal-50"
-      >
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center">
-            <div className="md:w-1/2 mb-10 md:mb-0 md:pr-8">
-              <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 transform rotate-1 hover:rotate-0 transition-all duration-300">
-                <div className="aspect-video relative rounded-md bg-gradient-to-br from-blue-100 to-teal-100 flex items-center justify-center overflow-hidden">
-                  <div className="absolute w-20 h-20 bg-blue-500 rounded-full -top-10 -left-10 opacity-20"></div>
-                  <div className="absolute w-32 h-32 bg-teal-500 rounded-full -bottom-16 -right-16 opacity-20"></div>
-                  <div className="z-10 text-2xl font-bold text-gray-800">
-                    About Us
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="md:w-1/2 md:pl-8">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Story</h2>
-              <p className="text-lg text-gray-600 mb-6">
-                Replace this with your company's story. Tell your visitors who
-                you are, what you do, and why they should choose you. Make it
-                personal and engaging.
-              </p>
-              <ul className="space-y-4">
-                <li className="flex items-start">
-                  <div className="flex-shrink-0 h-6 w-6 rounded-full bg-green-100 flex items-center justify-center text-green-500 mr-3">
-                    ✓
-                  </div>
-                  <p className="text-gray-600">
-                    Share your company's mission and values
-                  </p>
-                </li>
-                <li className="flex items-start">
-                  <div className="flex-shrink-0 h-6 w-6 rounded-full bg-green-100 flex items-center justify-center text-green-500 mr-3">
-                    ✓
-                  </div>
-                  <p className="text-gray-600">
-                    Highlight what makes your offering unique
-                  </p>
-                </li>
-                <li className="flex items-start">
-                  <div className="flex-shrink-0 h-6 w-6 rounded-full bg-green-100 flex items-center justify-center text-green-500 mr-3">
-                    ✓
-                  </div>
-                  <p className="text-gray-600">
-                    Build trust with testimonials and social proof
-                  </p>
-                </li>
-              </ul>
-              <div className="mt-8">
-                <button className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-all transform hover:scale-105 flex items-center">
-                  Learn more
-                  <ChevronRight className="ml-2 h-4 w-4" />
+              {/* Mobile menu button */}
+              <div className="md:hidden flex items-center space-x-2">
+                <button
+                  onClick={toggleTheme}
+                  className="p-2 rounded-lg hover:bg-[var(--highlight-color)] transition-colors"
+                >
+                  {theme === "light" ? (
+                    <Moon className="w-5 h-5 text-[var(--accent-color)]" />
+                  ) : (
+                    <Sun className="w-5 h-5 text-[var(--accent-color)]" />
+                  )}
+                </button>
+                <button
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className="text-[var(--text-primary)]"
+                >
+                  {isMenuOpen ? (
+                    <X className="h-6 w-6" />
+                  ) : (
+                    <Menu className="h-6 w-6" />
+                  )}
                 </button>
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Testimonials Section */}
-      <section className="py-16 md:py-24 bg-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              What Our Customers Say
-            </h2>
-            <p className="text-lg text-gray-600">
-              Don't just take our word for it. Here's what people are saying.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
-              <div className="flex items-center mb-4">
-                <div className="text-yellow-400 flex">
-                  <Star className="h-5 w-5 fill-current" />
-                  <Star className="h-5 w-5 fill-current" />
-                  <Star className="h-5 w-5 fill-current" />
-                  <Star className="h-5 w-5 fill-current" />
-                  <Star className="h-5 w-5 fill-current" />
-                </div>
-              </div>
-              <p className="text-gray-600 italic mb-4">
-                "Replace this with a real testimonial from one of your satisfied
-                customers. Make it specific and authentic."
-              </p>
-              <div className="flex items-center">
-                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-400 to-teal-400 mr-3"></div>
-                <div>
-                  <h4 className="font-medium">Customer Name</h4>
-                  <p className="text-sm text-gray-500">Position, Company</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
-              <div className="flex items-center mb-4">
-                <div className="text-yellow-400 flex">
-                  <Star className="h-5 w-5 fill-current" />
-                  <Star className="h-5 w-5 fill-current" />
-                  <Star className="h-5 w-5 fill-current" />
-                  <Star className="h-5 w-5 fill-current" />
-                  <Star className="h-5 w-5 fill-current" />
-                </div>
-              </div>
-              <p className="text-gray-600 italic mb-4">
-                "Another testimonial here. Focus on the specific results or
-                benefits your customers have experienced."
-              </p>
-              <div className="flex items-center">
-                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-400 to-teal-400 mr-3"></div>
-                <div>
-                  <h4 className="font-medium">Customer Name</h4>
-                  <p className="text-sm text-gray-500">Position, Company</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
-              <div className="flex items-center mb-4">
-                <div className="text-yellow-400 flex">
-                  <Star className="h-5 w-5 fill-current" />
-                  <Star className="h-5 w-5 fill-current" />
-                  <Star className="h-5 w-5 fill-current" />
-                  <Star className="h-5 w-5 fill-current" />
-                  <Star className="h-5 w-5 fill-current" />
-                </div>
-              </div>
-              <p className="text-gray-600 italic mb-4">
-                "A third testimonial to reinforce your credibility. Real
-                testimonials from happy customers are incredibly powerful."
-              </p>
-              <div className="flex items-center">
-                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-400 to-teal-400 mr-3"></div>
-                <div>
-                  <h4 className="font-medium">Customer Name</h4>
-                  <p className="text-sm text-gray-500">Position, Company</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16 md:py-24 bg-blue-600 text-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Ready to get started?
-            </h2>
-            <p className="text-xl text-blue-100 mb-8">
-              Join thousands of satisfied customers today.
-            </p>
-            <div className="bg-white rounded-lg p-1 flex flex-col sm:flex-row max-w-lg mx-auto">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-grow px-4 py-3 rounded-l-md focus:outline-none text-gray-800"
-              />
-              <button className="bg-blue-600 text-white px-6 py-3 rounded-md sm:rounded-l-none hover:bg-blue-700 transition-all mt-2 sm:mt-0">
-                Sign Up
-              </button>
-            </div>
-            <p className="text-sm text-blue-200 mt-4">
-              No credit card required. Free 14-day trial.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section id="contact" className="py-16 md:py-24 bg-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Get In Touch
-              </h2>
-              <p className="text-lg text-gray-600">
-                We'd love to hear from you. Here's how you can reach us.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-xl font-semibold mb-4">
-                  Send us a message
-                </h3>
-                <form>
-                  <div className="mb-4">
-                    <label
-                      htmlFor="name"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Your name"
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="your@email.com"
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label
-                      htmlFor="message"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      Message
-                    </label>
-                    <textarea
-                      id="message"
-                      rows="4"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="How can we help you?"
-                    ></textarea>
-                  </div>
+          {/* Mobile Navigation */}
+          {isMenuOpen && (
+            <div className="md:hidden bg-[var(--bg-primary)] border-t border-[var(--border-color)]">
+              <div className="px-4 py-3 space-y-3">
+                {[
+                  { name: "Features", href: "#features" },
+                  { name: "How it Works", href: "#how-it-works" },
+                  { name: "Testimonials", href: "#testimonials" },
+                ].map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    className="block py-2 text-[var(--text-secondary)] hover:text-[var(--accent-color)]"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.name}
+                  </a>
+                ))}
+                <div className="flex space-x-3 pt-3">
                   <button
-                    type="submit"
-                    className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors"
+                    onClick={() => navigate("/login")}
+                    className="flex-1 px-4 py-2 text-[var(--accent-color)] border border-[var(--accent-color)] rounded-lg text-center"
                   >
-                    Send Message
+                    Login
                   </button>
-                </form>
+                  <button
+                    onClick={() => navigate("/login")}
+                    className="flex-1 px-4 py-2 bg-[var(--accent-color)] text-white rounded-lg text-center"
+                  >
+                    Try Free
+                  </button>
+                </div>
               </div>
+            </div>
+          )}
+        </header>
 
-              <div>
-                <h3 className="text-xl font-semibold mb-4">
-                  Contact Information
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-medium">Address</h4>
-                    <p className="text-gray-600">
-                      123 Street Name, City, Country
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="font-medium">Phone</h4>
-                    <p className="text-gray-600">+1 (555) 123-4567</p>
-                  </div>
-                  <div>
-                    <h4 className="font-medium">Email</h4>
-                    <p className="text-gray-600">contact@yourcompany.com</p>
-                  </div>
-                  <div>
-                    <h4 className="font-medium">Hours</h4>
-                    <p className="text-gray-600">Monday - Friday: 9am - 5pm</p>
-                    <p className="text-gray-600">Saturday & Sunday: Closed</p>
-                  </div>
+        {/* Hero Section */}
+        <section
+          id="hero"
+          className="pt-24 pb-16 md:pt-32 md:pb-24 relative overflow-hidden"
+        >
+          {/* Background gradient */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[var(--bg-primary)] via-[var(--bg-secondary)] to-[var(--bg-primary)] opacity-60"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--accent-color)_0%,_transparent_50%)] opacity-10"></div>
+
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              {/* Text Content */}
+              <div className="text-center lg:text-left">
+                <div className="inline-flex items-center px-4 py-2 bg-[var(--accent-color)]/10 border border-[var(--accent-color)]/20 rounded-full text-sm font-medium text-[var(--accent-color)] mb-6">
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Now with GPT-4 & Claude Integration
                 </div>
 
-                <div className="mt-8">
-                  <h4 className="font-medium mb-4">Follow us</h4>
-                  <div className="flex space-x-4">
-                    <a
-                      href="#"
-                      className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-blue-100 hover:text-blue-600 transition-colors"
-                    >
-                      <svg
-                        className="h-5 w-5"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                      </svg>
-                    </a>
-                    <a
-                      href="#"
-                      className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-blue-100 hover:text-blue-600 transition-colors"
-                    >
-                      <svg
-                        className="h-5 w-5"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723 10.054 10.054 0 01-3.127 1.184A4.92 4.92 0 0011.78 8.28 13.98 13.98 0 016.407 5.07a4.928 4.928 0 001.522 6.57 4.887 4.887 0 01-2.228-.616v.061A4.926 4.926 0 009.52 15.95a4.916 4.916 0 01-2.228.084 4.93 4.93 0 004.6 3.42A9.88 9.88 0 010 21.44a14 14 0 007.548 2.212c9.057 0 14.01-7.502 14.01-14.01 0-.213-.005-.426-.015-.637a10.025 10.025 0 002.46-2.548l-.047-.02z" />
-                      </svg>
-                    </a>
-                    <a
-                      href="#"
-                      className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-blue-100 hover:text-blue-600 transition-colors"
-                    >
-                      <svg
-                        className="h-5 w-5"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913a5.885 5.885 0 001.384 2.126A5.868 5.868 0 004.14 23.37c.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558a5.898 5.898 0 002.126-1.384 5.86 5.86 0 001.384-2.126c.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913a5.89 5.89 0 00-1.384-2.126A5.847 5.847 0 0019.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.415 2.227.055 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227a3.81 3.81 0 01-.899 1.382 3.744 3.744 0 01-1.38.896c-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421a3.716 3.716 0 01-1.379-.899 3.644 3.644 0 01-.9-1.38c-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678a6.162 6.162 0 100 12.324 6.162 6.162 0 100-12.324zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405a1.441 1.441 0 01-2.88 0 1.44 1.44 0 012.88 0z" />
-                      </svg>
-                    </a>
-                    <a
-                      href="#"
-                      className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-blue-100 hover:text-blue-600 transition-colors"
-                    >
-                      <svg
-                        className="h-5 w-5"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M22.23 0H1.77C.8 0 0 .77 0 1.72v20.56C0 23.23.8 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.72V1.72C24 .77 23.2 0 22.23 0zM7.27 20.1H3.65V9.24h3.62V20.1zM5.47 7.76h-.03c-1.22 0-2-.83-2-1.87 0-1.06.8-1.87 2.05-1.87 1.24 0 2 .8 2.02 1.87 0 1.04-.78 1.87-2.05 1.87zM20.34 20.1h-3.63v-5.8c0-1.45-.52-2.45-1.83-2.45-1 0-1.6.67-1.87 1.32-.1.23-.11.55-.11.88v6.05H9.28s.05-9.82 0-10.84h3.63v1.54a3.6 3.6 0 013.26-1.8c2.39 0 4.18 1.56 4.18 4.89v6.21z" />
-                      </svg>
-                    </a>
+                <BlurText
+                  text="Build Intelligent Workflows That Actually Work"
+                  className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6"
+                  delay={100}
+                />
+
+                <p className="text-xl text-[var(--text-secondary)] mb-8 max-w-2xl">
+                  Create powerful AI-driven automation workflows with our visual
+                  builder. Connect LLMs, integrate your data, and scale
+                  intelligent processes that transform your business.
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                  <button
+                    onClick={() => navigate("/login")}
+                    className="px-8 py-4 bg-[var(--accent-color)] text-white rounded-lg hover:bg-[var(--button-hover)] transition-all transform hover:scale-105 shadow-lg flex items-center justify-center font-semibold"
+                  >
+                    Start Building Free
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </button>
+                  <button className="px-8 py-4 border border-[var(--border-color)] text-[var(--text-primary)] rounded-lg hover:bg-[var(--highlight-color)] transition-all flex items-center justify-center font-semibold">
+                    <Play className="mr-2 w-5 h-5" />
+                    Watch Demo
+                  </button>
+                </div>
+
+                <div className="mt-8 flex items-center justify-center lg:justify-start space-x-6 text-sm text-[var(--text-secondary)]">
+                  <div className="flex items-center">
+                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                    No credit card required
                   </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
+                    Free forever plan
+                  </div>
+                </div>
+              </div>
+
+              {/* Visual Element */}
+              <div className="relative">
+                <div className="relative bg-gradient-to-br from-[var(--card-bg)] to-[var(--bg-secondary)] rounded-2xl p-8 shadow-2xl border border-[var(--border-color)]">
+                  {/* Mock workflow visualization */}
+                  <ClickSpark
+                    sparkColor="#0fdbff"
+                    sparkSize={32}
+                    sparkRadius={90}
+                    sparkCount={12}
+                    duration={400}
+                    extraScale={1.3}
+                  >
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="text-sm font-medium text-[var(--text-secondary)]">
+                          Workflow Preview
+                        </div>
+                        <div className="flex space-x-1">
+                          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                          <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-3">
+                        {/* Workflow nodes */}
+                        <div className="flex items-center space-x-3 p-3 bg-[var(--accent-color)]/10 rounded-lg border border-[var(--accent-color)]/20">
+                          <div className="w-8 h-8 bg-[var(--accent-color)] rounded-lg flex items-center justify-center">
+                            <Database className="w-4 h-4 text-white" />
+                          </div>
+                          <div className="flex-1">
+                            <div className="text-sm font-medium">
+                              Data Input
+                            </div>
+                            <div className="text-xs text-[var(--text-secondary)]">
+                              Process incoming data
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex justify-center">
+                          <ArrowRight className="w-4 h-4 text-[var(--text-secondary)]" />
+                        </div>
+
+                        <div className="flex items-center space-x-3 p-3 bg-purple-500/10 rounded-lg border border-purple-500/20">
+                          <div className="w-8 h-8 bg-purple-500 rounded-lg flex items-center justify-center">
+                            <Brain className="w-4 h-4 text-white" />
+                          </div>
+                          <div className="flex-1">
+                            <div className="text-sm font-medium">
+                              AI Analysis
+                            </div>
+                            <div className="text-xs text-[var(--text-secondary)]">
+                              GPT-4 processes content
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex justify-center">
+                          <ArrowRight className="w-4 h-4 text-[var(--text-secondary)]" />
+                        </div>
+
+                        <div className="flex items-center space-x-3 p-3 bg-green-500/10 rounded-lg border border-green-500/20">
+                          <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                            <CheckCircle className="w-4 h-4 text-white" />
+                          </div>
+                          <div className="flex-1">
+                            <div className="text-sm font-medium">
+                              Auto Action
+                            </div>
+                            <div className="text-xs text-[var(--text-secondary)]">
+                              Execute workflow
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ClickSpark>
+                  {/* Floating elements */}
+                  <div className="absolute -top-4 -right-4 w-16 h-16 bg-[var(--accent-color)]/20 rounded-full animate-pulse"></div>
+                  <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-purple-500/20 rounded-full animate-pulse"></div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-gray-300 py-12">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <h3 className="text-xl font-bold mb-4 text-white">Your Brand</h3>
-              <p className="mb-4">
-                A short description of your company or product goes here. Make
-                it compelling.
+        {/* Features Section */}
+        <section
+          id="features"
+          className="py-16 md:py-24 bg-[var(--bg-secondary)]"
+        >
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                Everything You Need to
+                <GradientText className="block">
+                  Automate Intelligently
+                </GradientText>
+              </h2>
+              <p className="text-lg text-[var(--text-secondary)]">
+                Our platform combines the power of AI with intuitive workflow
+                design to help you build automation that actually understands
+                your business.
               </p>
-              <div className="flex space-x-4">
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {features.map((feature, index) => (
+                <div
+                  key={index}
+                  className="group p-6 bg-[var(--card-bg)] rounded-xl border border-[var(--border-color)] shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                >
+                  <ClickSpark
+                    sparkColor="#0fdbff"
+                    sparkSize={32}
+                    sparkRadius={90}
+                    sparkCount={12}
+                    duration={400}
+                    extraScale={1.3}
+                  >
+                    <div className="mb-4 p-3 bg-[var(--accent-color)]/10 rounded-lg w-fit group-hover:bg-[var(--accent-color)]/20 transition-colors">
+                      <div className="text-[var(--accent-color)]">
+                        {feature.icon}
+                      </div>
+                    </div>
+                    <h3 className="text-xl font-semibold mb-3">
+                      {feature.title}
+                    </h3>
+                    <p className="text-[var(--text-secondary)] leading-relaxed">
+                      {feature.description}
+                    </p>
+                  </ClickSpark>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* How It Works Section */}
+        <section id="how-it-works" className="py-16 md:py-24">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                From Idea to Execution in
+                <GradientText className="block">
+                  Three Simple Steps
+                </GradientText>
+              </h2>
+              <p className="text-lg text-[var(--text-secondary)]">
+                Our intuitive platform makes it easy to go from concept to fully
+                automated workflow in minutes.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+              {steps.map((step, index) => (
+                <div key={index} className="relative text-center group">
+                  {/* Step number */}
+                  <div className="mb-6 mx-auto w-16 h-16 bg-gradient-to-br from-[var(--accent-color)] to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg group-hover:scale-110 transition-transform">
+                    {step.number}
+                  </div>
+
+                  {/* Icon */}
+                  <div className="mb-4 mx-auto w-fit p-4 bg-[var(--card-bg)] rounded-xl border border-[var(--border-color)] group-hover:shadow-lg transition-all">
+                    <div className="text-[var(--accent-color)]">
+                      {step.icon}
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <h3 className="text-xl font-semibold mb-3">{step.title}</h3>
+                  <p className="text-[var(--text-secondary)] leading-relaxed">
+                    {step.description}
+                  </p>
+
+                  {/* Connector line (hidden on mobile) */}
+                  {index < steps.length - 1 && (
+                    <div className="hidden md:block absolute top-8 left-full w-full h-0.5 bg-gradient-to-r from-[var(--accent-color)] to-transparent opacity-30 transform -translate-x-8"></div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Testimonials Section */}
+        <section
+          id="testimonials"
+          className="py-16 md:py-24 bg-[var(--bg-secondary)]"
+        >
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                Trusted by Teams at
+                <GradientText className="block">Leading Companies</GradientText>
+              </h2>
+              <p className="text-lg text-[var(--text-secondary)]">
+                See how teams are transforming their operations with intelligent
+                workflow automation.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {testimonials.map((testimonial, index) => (
+                <div
+                  key={index}
+                  className="p-6 bg-[var(--card-bg)] rounded-xl border border-[var(--border-color)] shadow-sm hover:shadow-lg transition-all"
+                >
+                  <div className="flex items-center mb-4">
+                    <div className="text-yellow-400 flex">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="h-4 w-4 fill-current" />
+                      ))}
+                    </div>
+                  </div>
+
+                  <p className="text-[var(--text-secondary)] mb-6 italic leading-relaxed">
+                    "{testimonial.content}"
+                  </p>
+
+                  <div className="flex items-center">
+                    <div className="w-10 h-10 bg-gradient-to-br from-[var(--accent-color)] to-purple-500 rounded-full flex items-center justify-center text-white font-semibold text-sm mr-3">
+                      {testimonial.avatar}
+                    </div>
+                    <div>
+                      <h4 className="font-semibold">{testimonial.name}</h4>
+                      <p className="text-sm text-[var(--text-secondary)]">
+                        {testimonial.role}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-16 md:py-24 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent-color)]/10 via-purple-500/10 to-[var(--accent-color)]/10"></div>
+
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                Ready to Transform Your
+                <GradientText className="block">
+                  Business with AI Workflows?
+                </GradientText>
+              </h2>
+              <p className="text-xl text-[var(--text-secondary)] mb-8">
+                Join thousands of teams already automating their processes with
+                intelligent workflows. Start building for free today.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <button
+                  onClick={() => navigate("/login")}
+                  className="px-8 py-4 bg-[var(--accent-color)] text-white rounded-lg hover:bg-[var(--button-hover)] transition-all transform hover:scale-105 shadow-lg flex items-center font-semibold text-lg"
+                >
+                  Start Building Workflows Today
+                  <Sparkles className="ml-2 w-5 h-5" />
+                </button>
+                <p className="text-sm text-[var(--text-secondary)]">
+                  No credit card required • Free forever plan • 5-minute setup
+                </p>
+              </div>
+
+              {/* Trust indicators */}
+              <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-8 opacity-60">
+                <div className="flex items-center justify-center space-x-2">
+                  <Shield className="w-5 h-5" />
+                  <span className="text-sm">SOC 2 Compliant</span>
+                </div>
+                <div className="flex items-center justify-center space-x-2">
+                  <BarChart3 className="w-5 h-5" />
+                  <span className="text-sm">99.9% Uptime</span>
+                </div>
+                <div className="flex items-center justify-center space-x-2">
+                  <Network className="w-5 h-5" />
+                  <span className="text-sm">Enterprise Ready</span>
+                </div>
+                <div className="flex items-center justify-center space-x-2">
+                  <Zap className="w-5 h-5" />
+                  <span className="text-sm">Lightning Fast</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="py-12 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+              {/* Brand */}
+              <div>
+                <div className="flex items-center space-x-2 mb-4">
+                  <div className="w-8 h-8 bg-gradient-to-br from-[var(--accent-color)] to-purple-500 rounded-lg flex items-center justify-center">
+                    <Workflow className="w-5 h-5 text-white" />
+                  </div>
+                  <span className="text-lg font-bold">
+                    <GradientText>FlowAI</GradientText>
+                  </span>
+                </div>
+                <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
+                  Building the future of intelligent workflow automation with
+                  AI-powered solutions.
+                </p>
+              </div>
+
+              {/* Product */}
+              <div>
+                <h4 className="font-semibold mb-4">Product</h4>
+                <ul className="space-y-2 text-sm text-[var(--text-secondary)]">
+                  <li>
+                    <a
+                      href="#"
+                      className="hover:text-[var(--accent-color)] transition-colors"
+                    >
+                      Features
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="hover:text-[var(--accent-color)] transition-colors"
+                    >
+                      Pricing
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="hover:text-[var(--accent-color)] transition-colors"
+                    >
+                      Integrations
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="hover:text-[var(--accent-color)] transition-colors"
+                    >
+                      API
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Company */}
+              <div>
+                <h4 className="font-semibold mb-4">Company</h4>
+                <ul className="space-y-2 text-sm text-[var(--text-secondary)]">
+                  <li>
+                    <a
+                      href="#"
+                      className="hover:text-[var(--accent-color)] transition-colors"
+                    >
+                      About
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="hover:text-[var(--accent-color)] transition-colors"
+                    >
+                      Blog
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="hover:text-[var(--accent-color)] transition-colors"
+                    >
+                      Careers
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="hover:text-[var(--accent-color)] transition-colors"
+                    >
+                      Contact
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Legal */}
+              <div>
+                <h4 className="font-semibold mb-4">Legal</h4>
+                <ul className="space-y-2 text-sm text-[var(--text-secondary)]">
+                  <li>
+                    <a
+                      href="#"
+                      className="hover:text-[var(--accent-color)] transition-colors"
+                    >
+                      Privacy Policy
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="hover:text-[var(--accent-color)] transition-colors"
+                    >
+                      Terms of Service
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="hover:text-[var(--accent-color)] transition-colors"
+                    >
+                      Cookie Policy
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      className="hover:text-[var(--accent-color)] transition-colors"
+                    >
+                      Security
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Footer bottom */}
+            <div className="mt-12 pt-8 border-t border-[var(--border-color)] flex flex-col md:flex-row justify-between items-center">
+              <p className="text-sm text-[var(--text-secondary)]">
+                © {new Date().getFullYear()} FlowAI. All rights reserved.
+              </p>
+              <div className="mt-4 md:mt-0 flex space-x-6">
                 <a
                   href="#"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-[var(--text-secondary)] hover:text-[var(--accent-color)] transition-colors"
                 >
                   <svg
-                    className="h-5 w-5"
+                    className="w-5 h-5"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
-                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                    <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
                   </svg>
                 </a>
                 <a
                   href="#"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-[var(--text-secondary)] hover:text-[var(--accent-color)] transition-colors"
                 >
                   <svg
-                    className="h-5 w-5"
+                    className="w-5 h-5"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
-                    <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723 10.054 10.054 0 01-3.127 1.184A4.92 4.92 0 0011.78 8.28 13.98 13.98 0 016.407 5.07a4.928 4.928 0 001.522 6.57 4.887 4.887 0 01-2.228-.616v.061A4.926 4.926 0 009.52 15.95a4.916 4.916 0 01-2.228.084 4.93 4.93 0 004.6 3.42A9.88 9.88 0 010 21.44a14 14 0 007.548 2.212c9.057 0 14.01-7.502 14.01-14.01 0-.213-.005-.426-.015-.637a10.025 10.025 0 002.46-2.548l-.047-.02z" />
+                    <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z" />
                   </svg>
                 </a>
                 <a
                   href="#"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-[var(--text-secondary)] hover:text-[var(--accent-color)] transition-colors"
                 >
                   <svg
-                    className="h-5 w-5"
+                    className="w-5 h-5"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
-                    <path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913a5.885 5.885 0 001.384 2.126A5.868 5.868 0 004.14 23.37c.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558a5.898 5.898 0 002.126-1.384 5.86 5.86 0 001.384-2.126c.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913a5.89 5.89 0 00-1.384-2.126A5.847 5.847 0 0019.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.415 2.227.055 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227a3.81 3.81 0 01-.899 1.382 3.744 3.744 0 01-1.38.896c-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421a3.716 3.716 0 01-1.379-.899 3.644 3.644 0 01-.9-1.38c-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678a6.162 6.162 0 100 12.324 6.162 6.162 0 100-12.324zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405a1.441 1.441 0 01-2.88 0 1.44 1.44 0 012.88 0z" />
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                  </svg>
+                </a>
+                <a
+                  href="#"
+                  className="text-[var(--text-secondary)] hover:text-[var(--accent-color)] transition-colors"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.161-1.499-.699-2.436-2.888-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.357-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24.009 12.017 24c6.624 0 11.99-5.367 11.99-12.013C24.007 5.367 18.641.001.012.001z" />
                   </svg>
                 </a>
               </div>
             </div>
-
-            <div>
-              <h4 className="text-white font-medium mb-4">Products</h4>
-              <ul className="space-y-2">
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Features
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Pricing
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    FAQ
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Downloads
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-white font-medium mb-4">Company</h4>
-              <ul className="space-y-2">
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    About
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Blog
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Careers
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Press
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-white font-medium mb-4">Legal</h4>
-              <ul className="space-y-2">
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Terms
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Privacy
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Cookies
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Licenses
-                  </a>
-                </li>
-              </ul>
-            </div>
           </div>
+        </footer>
 
-          <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p>
-              © {new Date().getFullYear()} Your Company. All rights reserved.
-            </p>
-            <div className="mt-4 md:mt-0">
-              <a
-                href="#"
-                className="text-gray-400 hover:text-white transition-colors mr-4"
-              >
-                Privacy Policy
-              </a>
-              <a
-                href="#"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                Terms of Service
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+        {/* Scroll to top button */}
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className={`fixed bottom-20 right-8 p-3 bg-[var(--accent-color)] text-white rounded-full shadow-lg hover:bg-[var(--button-hover)] transition-all transform hover:scale-110 z-40 ${
+            scrolled
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-4 pointer-events-none"
+          }`}
+        >
+          <ChevronRight className="w-5 h-5 transform -rotate-90" />
+        </button>
 
-      {/* Add animations */}
-      <style jsx>{`
-        @keyframes float {
-          0% {
-            transform: translateY(0px);
+        {/* Add custom animations */}
+        <style jsx>{`
+          @keyframes float {
+            0%,
+            100% {
+              transform: translateY(0px);
+            }
+            50% {
+              transform: translateY(-10px);
+            }
           }
-          50% {
-            transform: translateY(-10px);
-          }
-          100% {
-            transform: translateY(0px);
-          }
-        }
 
-        @keyframes fade-in-up {
-          0% {
-            opacity: 0;
-            transform: translateY(20px);
+          @keyframes fade-in {
+            0% {
+              opacity: 0;
+              transform: translateY(20px);
+            }
+            100% {
+              opacity: 1;
+              transform: translateY(0);
+            }
           }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
+
+          .animate-float {
+            animation: float 6s ease-in-out infinite;
           }
-        }
 
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
+          .animate-fade-in {
+            animation: fade-in 0.6s ease-out;
+          }
 
-        .animate-fade-in-up {
-          animation: fade-in-up 1s ease-out;
-        }
-      `}</style>
+          /* Smooth scrolling */
+          html {
+            scroll-behavior: smooth;
+          }
+
+          /* Custom scrollbar */
+          ::-webkit-scrollbar {
+            width: 8px;
+          }
+
+          ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+          }
+
+          ::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 4px;
+          }
+
+          ::-webkit-scrollbar-thumb:hover {
+            background: var(--button-hover);
+          }
+        `}</style>
+      </ClickSpark>
     </div>
   );
 }

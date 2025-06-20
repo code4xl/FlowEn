@@ -7,7 +7,7 @@ const crypto = require("crypto");
 const { DateTime } = require("luxon");
 
 const registerUser = async (userData) => {
-  const { name, mobile, email_id, password, role_id } = userData;
+  const { name, mobile, email_id, password } = userData;
 
   // Hash the password
   const saltRounds = 10;
@@ -25,11 +25,10 @@ const registerUser = async (userData) => {
         mobile: mobile,
         email: email_id,
         password: hashedPassword,
-        role_id,
         otp,
       },
     ])
-    .select("u_id, name, mobile, email, role_id, otp, user_roles(name)")
+    .select("u_id, name, mobile, email, role_id, otp")
     .single();
   console.log(data);
   if (error) {
