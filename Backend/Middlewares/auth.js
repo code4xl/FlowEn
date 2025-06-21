@@ -1,28 +1,36 @@
 const jwt = require('jsonwebtoken');
-const authService = require('../services/auth');
+
+const secret = process.env.JWT_SECRET || 'MasterMindAlternateSecret';
 
 const verifyToken = (req, res, next) => {
-    const authHeader = req.header('Authorization');
-    const token = authHeader && authHeader.split(' ')[1]; // Get token from Bearer token
+    // Get token from HTTP-only cookie instead of Authorization header
+    const token = req.cookies.authToken;
 
     if (!token) {
         return res.status(401).json({ 
-            success: false, 
-            error: 'Access Denied. No Token Provided.' 
+            success: false,
+            error: 'Access Denied. No authentication token provided.' 
         });
     }
 
     try {
-        // Verify the token using the auth service (includes blacklist check)
-        const verified = authService.verifyToken(token);
+        // Verify the token
+        const verified = jwt.verify(token, secret);
         req.user = verified; // Attach the verified user data to the request object
-        req.token = token; // Store token in request for logout functionality
         next(); // Proceed to the next middleware or route handler
     } catch (err) {
         console.log('Token verification error:', err.message);
+        
+        // Clear invalid cookie
+        res.clearCookie('authToken', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict'
+        });
+        
         res.status(403).json({ 
-            success: false, 
-            error: 'Invalid or expired token' 
+            success: false,
+            error: 'Invalid or expired token. Please login again.' 
         });
     }
 };
