@@ -4,6 +4,7 @@ const secret = process.env.JWT_SECRET || 'MasterMindAlternateSecret';
 
 const verifyToken = (req, res, next) => {
     // Get token from HTTP-only cookie instead of Authorization header
+    // console.log(req.cookies);
     const token = req.cookies.authToken;
 
     if (!token) {

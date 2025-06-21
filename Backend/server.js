@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
+const cookieParser = require('cookie-parser');
+
 const authRoutes = require('./routes/auth');
 const accountRoutes = require('./routes/account');
 const uploadRoutes = require('./routes/upload');
@@ -24,13 +26,15 @@ app.use(cors({
     credentials: true,
   }));
 
+  
+app.use(cookieParser());
 app.use(express.json());
 app.get('/', (req, res) => {
     res.send('Welcome to the ReGenest Server.');
   });
 
 app.use('/api/auth', authRoutes);
-app.use('/api/user', accountRoutes);
+app.use('/api/account', accountRoutes);
 app.use('/api/upload', uploadRoutes);
 
 const PORT = process.env.PORT || 5000;
