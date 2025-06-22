@@ -6,6 +6,12 @@ export const authEndpoints = {
   REGISTER: BaseURL + 'auth/register',
   VALIDATE_GMAIL: BaseURL + 'auth/validate',
   GOOGLE_SIGN_IN: BaseURL + 'auth/sign-in-google',
+  CHECK_USER: BaseURL + 'auth/check-user',
+  SEND_OTP: BaseURL + 'auth/send-otp',
+  RESEND_OTP: BaseURL + 'auth/resend-otp',
+  VERIFY_OTP: BaseURL + 'auth/verify-otp',
+  FORGOT_PASSWORD: BaseURL + 'auth/forgot-password',
+  RESET_PASSWORD: BaseURL + 'auth/reset-password',
 };
 
 export const uploadEndPoints = {

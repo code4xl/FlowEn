@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, ArrowLeft, Mail, Lock, User, Briefcase } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { GoogleLogin } from '@react-oauth/google';
@@ -7,45 +7,141 @@ import {
   login,
   loginWithGoogle,
   register,
+  checkUser,
+  forgotPassword,
 } from '../../services/repository/userRepo';
 
 const Login = () => {
-  const [isLoginView, setIsLoginView] = useState(true);
+  const [currentView, setCurrentView] = useState('login'); // 'login', 'register', 'forgot-password'
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [mobile, setMobile] = useState('');
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // Form data
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    name: '',
+    occupation: '',
+  });
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (isLoginView) {
-      dispatch(login(email, password, navigate));
-    } else {
-      dispatch(register(name, email, password, mobile, navigate));
+    setIsLoading(true);
+    
+    try {
+      const result = await dispatch(login(formData.email, formData.password, navigate));
+      
+      if (result && result.shouldShowRegister) {
+        // Account doesn't exist, switch to register view with pre-filled email
+        setCurrentView('register');
+        // Email is already in formData
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleSuccess = async (credentialResponse) => {
-    dispatch(loginWithGoogle(credentialResponse, navigate));
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    
+    if (formData.password !== formData.confirmPassword) {
+      alert('Passwords do not match!');
+      return;
+    }
+    
+    if (formData.password.length < 6) {
+      alert('Password must be at least 6 characters long!');
+      return;
+    }
+
+    setIsLoading(true);
+    
+    try {
+      await dispatch(register(
+        formData.name,
+        formData.email,
+        formData.password,
+        formData.occupation,
+        navigate
+      ));
+    } catch (error) {
+      console.error('Registration error:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleError = () => {
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    
+    if (!formData.email) {
+      alert('Please enter your email address');
+      return;
+    }
+
+    setIsLoading(true);
+    
+    try {
+      await dispatch(forgotPassword(formData.email));
+      // After successful OTP send, navigate to verify email for password reset
+      navigate('/verify-email', { state: { email: formData.email, type: 'password-reset' } });
+    } catch (error) {
+      console.error('Forgot password error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      await dispatch(loginWithGoogle(credentialResponse, navigate));
+    } catch (error) {
+      console.error('Google login error:', error);
+    }
+  };
+
+  const handleGoogleError = () => {
     alert('Google Sign-In failed');
   };
 
-  const toggleView = () => {
-    setIsLoginView(!isLoginView);
+  const resetForm = () => {
+    setFormData({
+      email: formData.email, // Keep email when switching views
+      password: '',
+      confirmPassword: '',
+      name: '',
+      occupation: '',
+    });
+  };
+
+  const switchView = (view) => {
+    setCurrentView(view);
+    resetForm();
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-md p-8">
+    <div className="flex flex-col items-center py-5 min-h-screen bg-[var(--bg-primary)]">
+      <div className="items-center justify-start w-full px-4">
+        <button onClick={() => {navigate("/")}} className="text-[var(--accent-color)] px-2 py-1 rounded-xl bg-[var(--card-bg)]">Back</button>
+      </div>
+      <div className="w-full h-full items-center justify-center max-w-md bg-[var(--card-bg)] rounded-lg shadow-lg border border-[var(--border-color)] p-8">
         {/* Logo */}
         <div className="flex justify-center mb-6">
-          <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+          <div className="w-12 h-12 bg-[var(--accent-color)] rounded-full flex items-center justify-center">
             <svg
               width="24"
               height="24"
@@ -61,52 +157,59 @@ const Login = () => {
           </div>
         </div>
 
-        {isLoginView ? (
+        {/* Login View */}
+        {currentView === 'login' && (
           <div>
-            <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
-              Sign In
+            <h2 className="text-2xl font-bold text-center mb-6 text-[var(--text-primary)]">
+              Welcome Back
             </h2>
 
-            <form className="space-y-4" onSubmit={handleSubmit}>
+            <form className="space-y-4" onSubmit={handleLogin}>
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-[var(--text-secondary)] mb-1"
                 >
-                  Email
+                  Email Address
                 </label>
-                <input
-                  type="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="Enter your email"
-                  required
-                />
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--text-secondary)] w-5 h-5" />
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full pl-10 pr-3 py-2 bg-[var(--input-bg)] border border-[var(--input-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] text-[var(--text-primary)]"
+                    placeholder="Enter your email"
+                    required
+                  />
+                </div>
               </div>
 
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-[var(--text-secondary)] mb-1"
                 >
                   Password
                 </label>
                 <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--text-secondary)] w-5 h-5" />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     id="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    className="w-full pl-10 pr-10 py-2 bg-[var(--input-bg)] border border-[var(--input-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] text-[var(--text-primary)]"
                     placeholder="Enter your password"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--text-secondary)]"
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
@@ -119,39 +222,41 @@ const Login = () => {
                     id="remember-me"
                     name="remember-me"
                     type="checkbox"
-                    className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-[var(--accent-color)] focus:ring-[var(--accent-color)] border-[var(--border-color)] rounded"
                   />
                   <label
                     htmlFor="remember-me"
-                    className="ml-2 block text-sm text-gray-700"
+                    className="ml-2 block text-sm text-[var(--text-secondary)]"
                   >
                     Remember me
                   </label>
                 </div>
 
-                <a
-                  href="#"
-                  className="text-sm font-medium text-green-600 hover:text-green-500"
+                <button
+                  type="button"
+                  onClick={() => switchView('forgot-password')}
+                  className="text-sm font-medium text-[var(--accent-color)] hover:opacity-80"
                 >
                   Forgot password?
-                </a>
+                </button>
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition"
+                disabled={isLoading}
+                className="w-full bg-[var(--button-bg)] text-[var(--button-text)] py-2 px-4 rounded-md hover:bg-[var(--button-hover)] transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Sign In
+                {isLoading ? 'Signing In...' : 'Sign In'}
               </button>
             </form>
 
-            <div className="mt-6">
+            {/* <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300"></div>
+                  <div className="w-full border-t border-[var(--border-color)]"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">
+                  <span className="px-2 bg-[var(--card-bg)] text-[var(--text-secondary)]">
                     Or continue with
                   </span>
                 </div>
@@ -160,126 +265,183 @@ const Login = () => {
               <div className="mt-6">
                 <div className="w-full">
                   <GoogleLogin
-                    onSuccess={handleSuccess}
-                    onError={handleError}
+                    onSuccess={handleGoogleSuccess}
+                    onError={handleGoogleError}
                     scope="email profile"
                   />
                 </div>
               </div>
-            </div>
+            </div> */}
 
-            <p className="mt-6 text-center text-sm text-gray-600">
+            <p className="mt-6 text-center text-sm text-[var(--text-secondary)]">
               Don't have an account?{' '}
               <button
-                onClick={toggleView}
-                className="font-medium text-green-600 hover:text-green-500"
+                onClick={() => switchView('register')}
+                className="font-medium text-[var(--accent-color)] hover:opacity-80"
               >
                 Sign up
               </button>
             </p>
           </div>
-        ) : (
-          <div>
-            <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
-              Create Account
-            </h2>
+        )}
 
-            <form className="space-y-4" onSubmit={handleSubmit}>
+        {/* Register View */}
+        {currentView === 'register' && (
+          <div>
+            <div className="flex items-center mb-6">
+              <button
+                onClick={() => switchView('login')}
+                className="mr-3 text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+              <h2 className="text-2xl font-bold text-[var(--text-primary)]">
+                Create Account
+              </h2>
+            </div>
+
+            <form className="space-y-4" onSubmit={handleRegister}>
               <div>
                 <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  htmlFor="register-name"
+                  className="block text-sm font-medium text-[var(--text-secondary)] mb-1"
                 >
                   Full Name
                 </label>
-                <input
-                  type="text"
-                  id="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="Enter your full name"
-                  required
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="mobile"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  Mobile Number
-                </label>
-                <input
-                  type="tel"
-                  id="mobile"
-                  value={mobile}
-                  onChange={(e) => setMobile(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="Enter your mobile number"
-                />
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--text-secondary)] w-5 h-5" />
+                  <input
+                    type="text"
+                    id="register-name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    className="w-full pl-10 pr-3 py-2 bg-[var(--input-bg)] border border-[var(--input-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] text-[var(--text-primary)]"
+                    placeholder="Enter your full name"
+                    required
+                  />
+                </div>
               </div>
 
               <div>
                 <label
                   htmlFor="register-email"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-[var(--text-secondary)] mb-1"
                 >
-                  Email
+                  Email Address
                 </label>
-                <input
-                  type="email"
-                  id="register-email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="Enter your email"
-                  required
-                />
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--text-secondary)] w-5 h-5" />
+                  <input
+                    type="email"
+                    id="register-email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full pl-10 pr-3 py-2 bg-[var(--input-bg)] border border-[var(--input-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] text-[var(--text-primary)]"
+                    placeholder="Enter your email"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="register-occupation"
+                  className="block text-sm font-medium text-[var(--text-secondary)] mb-1"
+                >
+                  Occupation
+                </label>
+                <div className="relative">
+                  <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--text-secondary)] w-5 h-5" />
+                  <input
+                    type="text"
+                    id="register-occupation"
+                    name="occupation"
+                    value={formData.occupation}
+                    onChange={handleInputChange}
+                    className="w-full pl-10 pr-3 py-2 bg-[var(--input-bg)] border border-[var(--input-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] text-[var(--text-primary)]"
+                    placeholder="Enter your occupation"
+                    required
+                  />
+                </div>
               </div>
 
               <div>
                 <label
                   htmlFor="register-password"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-[var(--text-secondary)] mb-1"
                 >
                   Password
                 </label>
                 <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--text-secondary)] w-5 h-5" />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     id="register-password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Create a password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    className="w-full pl-10 pr-10 py-2 bg-[var(--input-bg)] border border-[var(--input-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] text-[var(--text-primary)]"
+                    placeholder="Create a password (min 6 characters)"
                     required
+                    minLength="6"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--text-secondary)]"
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
               </div>
 
+              <div>
+                <label
+                  htmlFor="confirm-password"
+                  className="block text-sm font-medium text-[var(--text-secondary)] mb-1"
+                >
+                  Confirm Password
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--text-secondary)] w-5 h-5" />
+                  <input
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    id="confirm-password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    className="w-full pl-10 pr-10 py-2 bg-[var(--input-bg)] border border-[var(--input-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] text-[var(--text-primary)]"
+                    placeholder="Confirm your password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--text-secondary)]"
+                  >
+                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+              </div>
+
               <button
                 type="submit"
-                className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition"
+                disabled={isLoading}
+                className="w-full bg-[var(--button-bg)] text-[var(--button-text)] py-2 px-4 rounded-md hover:bg-[var(--button-hover)] transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Create Account
+                {isLoading ? 'Creating Account...' : 'Create Account'}
               </button>
             </form>
 
-            <div className="mt-6">
+            {/* <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300"></div>
+                  <div className="w-full border-t border-[var(--border-color)]"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">
+                  <span className="px-2 bg-[var(--card-bg)] text-[var(--text-secondary)]">
                     Or sign up with
                   </span>
                 </div>
@@ -288,19 +450,19 @@ const Login = () => {
               <div className="mt-6">
                 <div className="w-full">
                   <GoogleLogin
-                    onSuccess={handleSuccess}
-                    onError={handleError}
+                    onSuccess={handleGoogleSuccess}
+                    onError={handleGoogleError}
                     scope="email profile"
                   />
                 </div>
               </div>
-            </div>
+            </div> */}
 
-            <p className="mt-6 text-center text-sm text-gray-600">
+            <p className="mt-6 text-center text-sm text-[var(--text-secondary)]">
               Already have an account?{' '}
               <button
-                onClick={toggleView}
-                className="font-medium text-green-600 hover:text-green-500"
+                onClick={() => switchView('login')}
+                className="font-medium text-[var(--accent-color)] hover:opacity-80"
               >
                 Sign in
               </button>
@@ -308,13 +470,77 @@ const Login = () => {
           </div>
         )}
 
-        <p className="mt-6 text-xs text-center text-gray-500">
+        {/* Forgot Password View */}
+        {currentView === 'forgot-password' && (
+          <div>
+            <div className="flex items-center mb-6">
+              <button
+                onClick={() => switchView('login')}
+                className="mr-3 text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+              <h2 className="text-2xl font-bold text-[var(--text-primary)]">
+                Reset Password
+              </h2>
+            </div>
+
+            <p className="text-[var(--text-secondary)] text-center mb-6">
+              Enter your email address and we'll send you an OTP to reset your password.
+            </p>
+
+            <form className="space-y-4" onSubmit={handleForgotPassword}>
+              <div>
+                <label
+                  htmlFor="forgot-email"
+                  className="block text-sm font-medium text-[var(--text-secondary)] mb-1"
+                >
+                  Email Address
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--text-secondary)] w-5 h-5" />
+                  <input
+                    type="email"
+                    id="forgot-email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full pl-10 pr-3 py-2 bg-[var(--input-bg)] border border-[var(--input-border)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] text-[var(--text-primary)]"
+                    placeholder="Enter your email"
+                    required
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-[var(--button-bg)] text-[var(--button-text)] py-2 px-4 rounded-md hover:bg-[var(--button-hover)] transition disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? 'Sending OTP...' : 'Send Reset OTP'}
+              </button>
+            </form>
+
+            <p className="mt-6 text-center text-sm text-[var(--text-secondary)]">
+              Remember your password?{' '}
+              <button
+                onClick={() => switchView('login')}
+                className="font-medium text-[var(--accent-color)] hover:opacity-80"
+              >
+                Back to Sign in
+              </button>
+            </p>
+          </div>
+        )}
+
+        {/* Terms and Privacy */}
+        <p className="mt-6 text-xs text-center text-[var(--text-secondary)]">
           By continuing, you agree to our{' '}
-          <a href="#" className="text-green-600 hover:text-green-500">
+          <a href="#" className="text-[var(--accent-color)] hover:opacity-80">
             Terms of Service
           </a>{' '}
           and{' '}
-          <a href="#" className="text-green-600 hover:text-green-500">
+          <a href="#" className="text-[var(--accent-color)] hover:opacity-80">
             Privacy Policy
           </a>
         </p>
