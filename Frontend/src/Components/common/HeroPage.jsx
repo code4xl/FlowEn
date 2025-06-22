@@ -30,6 +30,8 @@ import { selectTheme, setTheme } from "../../app/DashboardSlice";
 import GradientText from "../bits/GradientText";
 import ClickSpark from "../bits/ClickSpark";
 import BlurText from "../bits/BlurText";
+import logo from "../../assets/Flowen_B.png";
+import logo_s from "../../assets/Flowen_S.png";
 
 export default function HeroPage() {
   const theme = useSelector(selectTheme);
@@ -161,7 +163,7 @@ export default function HeroPage() {
       >
         {/* Sticky Header */}
         <header
-          className={`fixed w-full z-50 transition-all duration-300 ${
+          className={`fixed w-full z-30 transition-all duration-300 ${
             scrolled
               ? "bg-[var(--bg-primary)]/95 backdrop-blur-md shadow-lg border-b border-[var(--border-color)]"
               : "bg-transparent"
@@ -171,12 +173,14 @@ export default function HeroPage() {
             <div className="flex justify-between items-center py-4">
               {/* Logo */}
               <div className="flex items-center space-x-2">
-                <div className="w-10 h-10 bg-gradient-to-br from-[var(--accent-color)] to-purple-500 rounded-lg flex items-center justify-center">
+                {/* <div className="w-10 h-10 bg-gradient-to-br from-[var(--accent-color)] to-purple-500 rounded-lg flex items-center justify-center">
                   <Workflow className="w-6 h-6 text-white" />
-                </div>
-                <span className="text-xl font-bold">
-                  <GradientText>FlowAI</GradientText>
-                </span>
+                </div> */}
+                <img src={logo_s} alt="logo_S" className="w-[2.5rem]" />
+                <img src={logo} alt="logo_B" className="w-[8rem]" />
+                {/* <span className="text-xl font-bold">
+                  <GradientText>FlowEn</GradientText>
+                </span> */}
               </div>
 
               {/* Desktop Navigation */}
@@ -288,7 +292,7 @@ export default function HeroPage() {
         {/* Hero Section */}
         <section
           id="hero"
-          className="pt-24 pb-16 md:pt-32 md:pb-24 relative overflow-hidden"
+          className="z-20 pt-24 pb-16 md:pt-32 md:pb-24 relative overflow-hidden"
         >
           {/* Background gradient */}
           <div className="absolute inset-0 bg-gradient-to-br from-[var(--bg-primary)] via-[var(--bg-secondary)] to-[var(--bg-primary)] opacity-60"></div>
@@ -431,7 +435,7 @@ export default function HeroPage() {
         {/* Features Section */}
         <section
           id="features"
-          className="py-16 md:py-24 bg-[var(--bg-secondary)]"
+          className="z-20 relative py-16 md:py-24 bg-[var(--bg-secondary)]"
         >
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16">
@@ -481,7 +485,7 @@ export default function HeroPage() {
         </section>
 
         {/* How It Works Section */}
-        <section id="how-it-works" className="py-16 md:py-24">
+        <section id="how-it-works" className="z-20 py-16 md:py-24">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -530,7 +534,7 @@ export default function HeroPage() {
         {/* Testimonials Section */}
         <section
           id="testimonials"
-          className="py-16 md:py-24 bg-[var(--bg-secondary)]"
+          className="z-20 py-16 md:py-24 bg-[var(--bg-secondary)]"
         >
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16">
@@ -580,7 +584,7 @@ export default function HeroPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-16 md:py-24 relative overflow-hidden">
+        <section className="z-20 py-16 md:py-24 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent-color)]/10 via-purple-500/10 to-[var(--accent-color)]/10"></div>
 
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -633,7 +637,7 @@ export default function HeroPage() {
         </section>
 
         {/* Footer */}
-        <footer className="py-12 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]">
+        <footer className="z-20 py-12 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
               {/* Brand */}
