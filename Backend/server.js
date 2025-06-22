@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const authRoutes = require('./Routes/auth');
 const accountRoutes = require('./Routes/account');
 const uploadRoutes = require('./Routes/upload');
+const builderRoutes = require('./routes/builder');
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/account', accountRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/builder', builderRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
