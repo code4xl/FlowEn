@@ -3,9 +3,9 @@ const cors = require('cors');
 require('dotenv').config();
 const cookieParser = require('cookie-parser');
 
-const authRoutes = require('./routes/auth');
-const accountRoutes = require('./routes/account');
-const uploadRoutes = require('./routes/upload');
+const authRoutes = require('./Routes/auth');
+const accountRoutes = require('./Routes/account');
+const uploadRoutes = require('./Routes/upload');
 
 const app = express();
 
