@@ -24,7 +24,7 @@ import {
   deleteWorkflow,
   activateWorkflow,
   getWorkflowById,
-} from "../../../Services/repository/BuilderRepo";
+} from "../../../Services/Repository/BuilderRepo";
 import PreviewModal from "./vwf_utils/PreviewModal";
 import toast from "react-hot-toast";
 

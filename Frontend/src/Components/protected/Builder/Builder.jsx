@@ -53,7 +53,7 @@ import {
   getNodes,
   createWorkflow,
   updateWorkflow,
-} from "../../../Services/repository/BuilderRepo";
+} from "../../../Services/Repository/BuilderRepo";
 import { selectTheme } from "../../../App/DashboardSlice";
 
 const Builder = () => {
