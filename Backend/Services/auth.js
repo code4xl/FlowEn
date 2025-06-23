@@ -2,7 +2,7 @@ const { supabase } = require("../config/config.js");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const emailTemplate = require("./Mail/mail/templates/EmailVerificationTemplate.js");
-const mailSender = require("./mail/mailSender.js");
+const mailSender = require("./Mail/mailSender.js");
 const { DateTime } = require("luxon");
 
 const secret = process.env.JWT_SECRET || 'MasterMindAlternateSecret';
