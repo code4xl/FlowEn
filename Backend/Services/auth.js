@@ -1,4 +1,4 @@
-const { supabase } = require("../Config/config.js");
+const { supabase } = require("../config/config.js");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const emailTemplate = require("./mail/mail/templates/EmailVerificationTemplate.js");
