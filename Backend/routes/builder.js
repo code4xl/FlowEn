@@ -8,8 +8,8 @@ const {
   deleteWorkflow,
   getUserWorkflows,
   getWorkflowCredits
-} = require('../Controllers/builder');
-const { activateWorkflow } = require('../Controllers/builder');
+} = require('../controllers/builder');
+const { activateWorkflow } = require('../controllers/builder');
 
 const router = express.Router();
 

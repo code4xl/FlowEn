@@ -11,7 +11,7 @@ const {
   updateCredits,
   verifyUserEmail,
   getUserActivity
-} = require('../Controllers/account');
+} = require('../controllers/account');
 
 const router = express.Router();
 
