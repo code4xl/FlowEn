@@ -1,4 +1,4 @@
-const { supabase } = require("../Config/config");
+const { supabase } = require("../config/config");
 const bcrypt = require("bcrypt");
 
 const usersTable = "users";
