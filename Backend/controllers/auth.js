@@ -155,8 +155,8 @@ const login = async (req, res) => {
       res.cookie('authToken', result.token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production', // HTTPS in production
-        sameSite: 'strict',
-        maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+        sameSite: 'None',
+        maxAge: 24 * 60 * 60 * 1000 // 30 days
       });
       
       // Remove token from response (since it's now in cookie)
