@@ -7,7 +7,7 @@ import {
   setAccount,
   setAccountAfterRegister,
   setDFeature,
-} from '../../app/DashboardSlice';
+} from '../../App/DashboardSlice';
 import { authEndpoints } from '../Apis';
 
 const { 

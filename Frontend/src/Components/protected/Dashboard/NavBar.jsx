@@ -7,7 +7,7 @@ import {
   selectAccount,
   setTheme,
   selectTheme,
-} from '../../../app/DashboardSlice';
+} from '../../../App/DashboardSlice';
 import logo from "../../../assets/Flowen_B.png"
 
 import { useNavigate } from 'react-router-dom';

@@ -6,7 +6,7 @@ import App from './App.jsx';
 import { BrowserRouter } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { Provider } from 'react-redux';
-import Store from './app/store.js';
+import Store from './App/store.js';
 
 import { GoogleOAuthProvider } from '@react-oauth/google';
 

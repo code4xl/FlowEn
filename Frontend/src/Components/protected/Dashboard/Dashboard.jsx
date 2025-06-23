@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { selectAccount } from '../../../app/DashboardSlice';
+import { selectAccount } from '../../../App/DashboardSlice';
 import { 
   Activity, 
   BarChart3, 

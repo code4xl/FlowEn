@@ -5,7 +5,7 @@ import {
   dashboardMenuState,
   setCloseDMenu,
   setDFeature,
-} from '../../app/DashboardSlice.js';
+} from '../../App/DashboardSlice.js';
 import { features } from '../data/dynamic.js';
 import { useNavigate } from 'react-router-dom';
 

@@ -1,16 +1,16 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { HeroPage, Login, VerifyEmail } from './components';
-import { dashboardMenuState } from './app/DashboardSlice';
-import { isUserLoggedIn } from './app/DashboardSlice';
+import { HeroPage, Login, VerifyEmail } from './Components';
+import { dashboardMenuState } from './App/DashboardSlice';
+import { isUserLoggedIn } from './App/DashboardSlice';
 
-import NavBar from './components/protected/Dashboard/NavBar';
-import Sidebar from './components/utils/Sidebar';
-import Dashboard from './components/protected/Dashboard/Dashboard';
-import Builder from './components/protected/Builder/Builder';
-import ExecuteWorkflow from './components/protected/ExecuteWF/ExecuteWorkflow';
-import ViewWorkflow from './components/protected/ViewWF/ViewWorkflow';
+import NavBar from './Components/protected/Dashboard/NavBar';
+import Sidebar from './Components/utils/Sidebar';
+import Dashboard from './Components/protected/Dashboard/Dashboard';
+import Builder from './Components/protected/Builder/Builder';
+import ExecuteWorkflow from './Components/protected/ExecuteWF/ExecuteWorkflow';
+import ViewWorkflow from './Components/protected/ViewWF/ViewWorkflow';
 
 const RoutesConfig = () => {
   const isLoggedIn = useSelector(isUserLoggedIn);

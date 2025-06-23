@@ -3,8 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import OtpInput from 'react-otp-input';
 import { useDispatch, useSelector } from 'react-redux';
 import { ArrowLeft, Timer, Mail, Shield, KeyRound } from 'lucide-react';
-import { selectAccount } from '../../app/DashboardSlice';
-import { verifyOTP, resendOTP, resetPassword } from '../../services/repository/userRepo';
+import { selectAccount } from '../../App/DashboardSlice';
+import { verifyOTP, resendOTP, resetPassword } from '../../Services/repository/userRepo';
 
 const VerifyEmail = () => {
   const [otp, setOtp] = useState('');

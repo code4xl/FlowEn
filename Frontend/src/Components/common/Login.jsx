@@ -17,7 +17,7 @@ import {
   register,
   checkUser,
   forgotPassword,
-} from "../../services/repository/userRepo";
+} from "../../Services/repository/userRepo";
 
 const Login = () => {
   const [currentView, setCurrentView] = useState("login"); // 'login', 'register', 'forgot-password'

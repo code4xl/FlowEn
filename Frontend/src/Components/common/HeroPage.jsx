@@ -26,7 +26,7 @@ import {
   Shield,
   BarChart3,
 } from "lucide-react";
-import { selectTheme, setTheme } from "../../app/DashboardSlice";
+import { selectTheme, setTheme } from "../../App/DashboardSlice";
 import GradientText from "../bits/GradientText";
 import ClickSpark from "../bits/ClickSpark";
 import BlurText from "../bits/BlurText";

@@ -53,8 +53,8 @@ import {
   getNodes,
   createWorkflow,
   updateWorkflow,
-} from "../../../services/repository/BuilderRepo";
-import { selectTheme } from "../../../app/DashboardSlice";
+} from "../../../Services/repository/BuilderRepo";
+import { selectTheme } from "../../../App/DashboardSlice";
 
 const Builder = () => {
   // Helper function to create unique IDs

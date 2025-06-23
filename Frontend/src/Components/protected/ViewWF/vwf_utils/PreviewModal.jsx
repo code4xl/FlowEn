@@ -28,7 +28,7 @@ import ToolNode from "../../Builder/builder_utils/nodes/ToolNode";
 import AgentNode from "../../Builder/builder_utils/nodes/AgentNode";
 import PatternMetaNode from "../../Builder/builder_utils/nodes/PatternMetaNode";
 import { useDispatch, useSelector } from "react-redux";
-import { selectTheme } from "../../../../app/DashboardSlice";
+import { selectTheme } from "../../../../App/DashboardSlice";
 
 const PreviewModal = ({
   isOpen,
