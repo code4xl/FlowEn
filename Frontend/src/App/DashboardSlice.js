@@ -5,7 +5,7 @@ const theme = localStorage.getItem('theme') || 'dark';
 const initialState = {
   dashboardMenuState: true,
   dashboardFeature: Dstate ? Dstate : 'Home',
-  account: localData ? localData : {id: "12", uname:"haresh", email:"kuradeharesh4002@gmail.com"},
+  account: localData ? localData : {},
   isLoggedIn: localData ? localData.isLoggedIn : false,
   profileData: [],
   theme: theme,
