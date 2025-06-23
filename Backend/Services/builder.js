@@ -55,7 +55,6 @@ const getWorkflowById = async (workflowId, userId) => {
       .select("wf_id, name, description, credits, data, created_at, updated_at, is_active")
       .eq("wf_id", workflowId)
       .eq("created_by", userId)
-      .eq("is_active", true)
       .single();
 
     if (error) throw error;
@@ -158,9 +157,8 @@ const getUserWorkflows = async (userId) => {
   try {
     const { data, error } = await supabase
       .from(workflowsTable)
-      .select("wf_id, name, description, credits, executed_count, created_at, updated_at")
+      .select("wf_id, name, description, credits, is_active, executed_count, created_at, updated_at")
       .eq("created_by", userId)
-      .eq("is_active", true)
       .order("updated_at", { ascending: false });
 
     if (error) throw error;

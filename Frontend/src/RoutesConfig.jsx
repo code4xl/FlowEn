@@ -8,7 +8,7 @@ import { isUserLoggedIn } from './app/DashboardSlice';
 import NavBar from './components/protected/Dashboard/NavBar';
 import Sidebar from './components/utils/Sidebar';
 import Dashboard from './components/protected/Dashboard/Dashboard';
-import CreateWorkflow from './components/protected/CreateWF/CreateWorkflow';
+import Builder from './components/protected/Builder/Builder';
 import ExecuteWorkflow from './components/protected/ExecuteWF/ExecuteWorkflow';
 import ViewWorkflow from './components/protected/ViewWF/ViewWorkflow';
 
@@ -47,7 +47,7 @@ const RoutesConfig = () => {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/create" element={<CreateWorkflow />} />
+            <Route path="/create" element={<Builder />} />
             <Route path="/execute" element={<ExecuteWorkflow />} />
             <Route path="/view" element={<ViewWorkflow />} />
           </Routes>
