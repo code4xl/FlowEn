@@ -1,29 +1,39 @@
-import React, { useState } from 'react';
-import { Eye, EyeOff, ArrowLeft, Mail, Lock, User, Briefcase } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { GoogleLogin } from '@react-oauth/google';
+import React, { useState } from "react";
+import {
+  Eye,
+  EyeOff,
+  ArrowLeft,
+  Mail,
+  Lock,
+  User,
+  Briefcase,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { GoogleLogin } from "@react-oauth/google";
 import {
   login,
   loginWithGoogle,
   register,
   checkUser,
   forgotPassword,
-} from '../../services/repository/userRepo';
+} from "../../services/repository/userRepo";
 
 const Login = () => {
-  const [currentView, setCurrentView] = useState('login'); // 'login', 'register', 'forgot-password'
+  const [currentView, setCurrentView] = useState("login"); // 'login', 'register', 'forgot-password'
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
+  const allowRegister = import.meta.env.VITE_ALLOW_REGISTER;
+  console.log("Allow Register:", allowRegister);
+
   // Form data
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
-    name: '',
-    occupation: '',
+    email: "",
+    password: "",
+    confirmPassword: "",
+    name: "",
+    occupation: "",
   });
 
   const navigate = useNavigate();
@@ -39,17 +49,19 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
-      const result = await dispatch(login(formData.email, formData.password, navigate));
-      
+      const result = await dispatch(
+        login(formData.email, formData.password, navigate)
+      );
+
       if (result && result.shouldShowRegister) {
         // Account doesn't exist, switch to register view with pre-filled email
-        setCurrentView('register');
+        setCurrentView("register");
         // Email is already in formData
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -57,29 +69,31 @@ const Login = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    
+
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match!');
+      alert("Passwords do not match!");
       return;
     }
-    
+
     if (formData.password.length < 6) {
-      alert('Password must be at least 6 characters long!');
+      alert("Password must be at least 6 characters long!");
       return;
     }
 
     setIsLoading(true);
-    
+
     try {
-      await dispatch(register(
-        formData.name,
-        formData.email,
-        formData.password,
-        formData.occupation,
-        navigate
-      ));
+      await dispatch(
+        register(
+          formData.name,
+          formData.email,
+          formData.password,
+          formData.occupation,
+          navigate
+        )
+      );
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error("Registration error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -87,20 +101,22 @@ const Login = () => {
 
   const handleForgotPassword = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.email) {
-      alert('Please enter your email address');
+      alert("Please enter your email address");
       return;
     }
 
     setIsLoading(true);
-    
+
     try {
       await dispatch(forgotPassword(formData.email));
       // After successful OTP send, navigate to verify email for password reset
-      navigate('/verify-email', { state: { email: formData.email, type: 'password-reset' } });
+      navigate("/verify-email", {
+        state: { email: formData.email, type: "password-reset" },
+      });
     } catch (error) {
-      console.error('Forgot password error:', error);
+      console.error("Forgot password error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -110,21 +126,21 @@ const Login = () => {
     try {
       await dispatch(loginWithGoogle(credentialResponse, navigate));
     } catch (error) {
-      console.error('Google login error:', error);
+      console.error("Google login error:", error);
     }
   };
 
   const handleGoogleError = () => {
-    alert('Google Sign-In failed');
+    alert("Google Sign-In failed");
   };
 
   const resetForm = () => {
     setFormData({
       email: formData.email, // Keep email when switching views
-      password: '',
-      confirmPassword: '',
-      name: '',
-      occupation: '',
+      password: "",
+      confirmPassword: "",
+      name: "",
+      occupation: "",
     });
   };
 
@@ -136,7 +152,14 @@ const Login = () => {
   return (
     <div className="flex flex-col items-center py-5 min-h-screen bg-[var(--bg-primary)]">
       <div className="items-center justify-start w-full px-4">
-        <button onClick={() => {navigate("/")}} className="text-[var(--accent-color)] px-2 py-1 rounded-xl bg-[var(--card-bg)]">Back</button>
+        <button
+          onClick={() => {
+            navigate("/");
+          }}
+          className="text-[var(--accent-color)] px-2 py-1 rounded-xl bg-[var(--card-bg)]"
+        >
+          Back
+        </button>
       </div>
       <div className="w-full h-full items-center justify-center max-w-md bg-[var(--card-bg)] rounded-lg shadow-lg border border-[var(--border-color)] p-8">
         {/* Logo */}
@@ -158,7 +181,7 @@ const Login = () => {
         </div>
 
         {/* Login View */}
-        {currentView === 'login' && (
+        {currentView === "login" && (
           <div>
             <h2 className="text-2xl font-bold text-center mb-6 text-[var(--text-primary)]">
               Welcome Back
@@ -197,7 +220,7 @@ const Login = () => {
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--text-secondary)] w-5 h-5" />
                   <input
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                     id="password"
                     name="password"
                     value={formData.password}
@@ -234,7 +257,7 @@ const Login = () => {
 
                 <button
                   type="button"
-                  onClick={() => switchView('forgot-password')}
+                  onClick={() => switchView("forgot-password")}
                   className="text-sm font-medium text-[var(--accent-color)] hover:opacity-80"
                 >
                   Forgot password?
@@ -246,7 +269,7 @@ const Login = () => {
                 disabled={isLoading}
                 className="w-full bg-[var(--button-bg)] text-[var(--button-text)] py-2 px-4 rounded-md hover:bg-[var(--button-hover)] transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? 'Signing In...' : 'Sign In'}
+                {isLoading ? "Signing In..." : "Sign In"}
               </button>
             </form>
 
@@ -274,9 +297,9 @@ const Login = () => {
             </div> */}
 
             <p className="mt-6 text-center text-sm text-[var(--text-secondary)]">
-              Don't have an account?{' '}
+              Don't have an account?{" "}
               <button
-                onClick={() => switchView('register')}
+                onClick={() => switchView("register")}
                 className="font-medium text-[var(--accent-color)] hover:opacity-80"
               >
                 Sign up
@@ -286,11 +309,11 @@ const Login = () => {
         )}
 
         {/* Register View */}
-        {currentView === 'register' && (
+        {(currentView === "register") && (allowRegister === "true" ? (
           <div>
             <div className="flex items-center mb-6">
               <button
-                onClick={() => switchView('login')}
+                onClick={() => switchView("login")}
                 className="mr-3 text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               >
                 <ArrowLeft className="w-5 h-5" />
@@ -377,7 +400,7 @@ const Login = () => {
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--text-secondary)] w-5 h-5" />
                   <input
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                     id="register-password"
                     name="password"
                     value={formData.password}
@@ -407,7 +430,7 @@ const Login = () => {
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--text-secondary)] w-5 h-5" />
                   <input
-                    type={showConfirmPassword ? 'text' : 'password'}
+                    type={showConfirmPassword ? "text" : "password"}
                     id="confirm-password"
                     name="confirmPassword"
                     value={formData.confirmPassword}
@@ -421,7 +444,11 @@ const Login = () => {
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[var(--text-secondary)]"
                   >
-                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    {showConfirmPassword ? (
+                      <EyeOff size={18} />
+                    ) : (
+                      <Eye size={18} />
+                    )}
                   </button>
                 </div>
               </div>
@@ -431,7 +458,7 @@ const Login = () => {
                 disabled={isLoading}
                 className="w-full bg-[var(--button-bg)] text-[var(--button-text)] py-2 px-4 rounded-md hover:bg-[var(--button-hover)] transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? 'Creating Account...' : 'Create Account'}
+                {isLoading ? "Creating Account..." : "Create Account"}
               </button>
             </form>
 
@@ -459,23 +486,76 @@ const Login = () => {
             </div> */}
 
             <p className="mt-6 text-center text-sm text-[var(--text-secondary)]">
-              Already have an account?{' '}
+              Already have an account?{" "}
               <button
-                onClick={() => switchView('login')}
+                onClick={() => switchView("login")}
                 className="font-medium text-[var(--accent-color)] hover:opacity-80"
               >
                 Sign in
               </button>
             </p>
           </div>
-        )}
+        ) : (
+          <div className="text-center p-8">
+            <div className="mb-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg
+                  className="w-8 h-8 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
+                Registration Currently Closed
+              </h2>
+              <p className="text-[var(--text-secondary)] mb-6">
+                This platform is currently in private beta. To request access,
+                please contact the project owner.
+              </p>
+            </div>
+
+            <a
+              href="https://hareshkurade.netlify.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg"
+            >
+              <svg
+                className="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                />
+              </svg>
+              Contact Haresh
+            </a>
+
+            <p className="text-sm text-gray-500 mt-4">
+              Click above to get platform access.
+            </p>
+          </div>
+        ))}
 
         {/* Forgot Password View */}
-        {currentView === 'forgot-password' && (
+        {currentView === "forgot-password" && (
           <div>
             <div className="flex items-center mb-6">
               <button
-                onClick={() => switchView('login')}
+                onClick={() => switchView("login")}
                 className="mr-3 text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
               >
                 <ArrowLeft className="w-5 h-5" />
@@ -486,7 +566,8 @@ const Login = () => {
             </div>
 
             <p className="text-[var(--text-secondary)] text-center mb-6">
-              Enter your email address and we'll send you an OTP to reset your password.
+              Enter your email address and we'll send you an OTP to reset your
+              password.
             </p>
 
             <form className="space-y-4" onSubmit={handleForgotPassword}>
@@ -517,14 +598,14 @@ const Login = () => {
                 disabled={isLoading}
                 className="w-full bg-[var(--button-bg)] text-[var(--button-text)] py-2 px-4 rounded-md hover:bg-[var(--button-hover)] transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? 'Sending OTP...' : 'Send Reset OTP'}
+                {isLoading ? "Sending OTP..." : "Send Reset OTP"}
               </button>
             </form>
 
             <p className="mt-6 text-center text-sm text-[var(--text-secondary)]">
-              Remember your password?{' '}
+              Remember your password?{" "}
               <button
-                onClick={() => switchView('login')}
+                onClick={() => switchView("login")}
                 className="font-medium text-[var(--accent-color)] hover:opacity-80"
               >
                 Back to Sign in
@@ -535,11 +616,11 @@ const Login = () => {
 
         {/* Terms and Privacy */}
         <p className="mt-6 text-xs text-center text-[var(--text-secondary)]">
-          By continuing, you agree to our{' '}
+          By continuing, you agree to our{" "}
           <a href="#" className="text-[var(--accent-color)] hover:opacity-80">
             Terms of Service
-          </a>{' '}
-          and{' '}
+          </a>{" "}
+          and{" "}
           <a href="#" className="text-[var(--accent-color)] hover:opacity-80">
             Privacy Policy
           </a>

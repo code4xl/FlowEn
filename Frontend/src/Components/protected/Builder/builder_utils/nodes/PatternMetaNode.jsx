@@ -6,7 +6,7 @@ const PatternMetaNode = ({ id, data, isConnectable }) => {
     const isReadOnly = data?.readOnly || false;
   return (
     <div style={{
-      background: 'var(--card-bg)',
+    //   background: 'var(--card-bg)',
       border: '2px solid var(--accent-color)',
       borderRadius: '0.75rem',
       boxShadow: 'var(--shadow-color) 0 8px 32px -4px',
