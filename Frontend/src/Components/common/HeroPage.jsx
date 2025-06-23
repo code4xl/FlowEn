@@ -643,12 +643,14 @@ export default function HeroPage() {
               {/* Brand */}
               <div>
                 <div className="flex items-center space-x-2 mb-4">
-                  <div className="w-8 h-8 bg-gradient-to-br from-[var(--accent-color)] to-purple-500 rounded-lg flex items-center justify-center">
+                  {/* <div className="w-8 h-8 bg-gradient-to-br from-[var(--accent-color)] to-purple-500 rounded-lg flex items-center justify-center">
                     <Workflow className="w-5 h-5 text-white" />
                   </div>
                   <span className="text-lg font-bold">
-                    <GradientText>FlowAI</GradientText>
-                  </span>
+                    <GradientText>FlowEn</GradientText>
+                  </span> */}
+                  <img src={logo_s} alt="logo_S" className="w-[2.5rem]" />
+                  <img src={logo} alt="logo_B" className="w-[8rem]" />
                 </div>
                 <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
                   Building the future of intelligent workflow automation with
@@ -777,8 +779,17 @@ export default function HeroPage() {
             {/* Footer bottom */}
             <div className="mt-12 pt-8 border-t border-[var(--border-color)] flex flex-col md:flex-row justify-between items-center">
               <p className="text-sm text-[var(--text-secondary)]">
-                © {new Date().getFullYear()} FlowAI. All rights reserved.
+                © {new Date().getFullYear()} FlowEn. All rights reserved.
               </p>
+              <div>
+                <p className="text-sm text-[var(--text-secondary)] font-poppins">
+                  Built with by <span className="text-red-500 text-xl mr-2">♥</span>  
+                  <a className="text-[var(--accent-color)] hover:underline" href="https://hareshkurade.netlify.app" target="_blank" rel="noopener noreferrer">
+                    Haresh Kurade
+                  </a>
+                  
+                </p>
+              </div>
               <div className="mt-4 md:mt-0 flex space-x-6">
                 <a
                   href="#"

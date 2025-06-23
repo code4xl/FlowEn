@@ -2,6 +2,112 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    
+    <title>FlowEn - AI-Powered Workflow Automation Platform</title>
+    <meta name="title" content="FlowEn - AI-Powered Workflow Automation Platform" />
+    <meta name="description" content="Build intelligent workflows with drag-and-drop interface. Integrate LLM agents, RAG, and smart triggers to automate your business processes with AI." />
+    <meta name="keywords" content="AI workflow, automation, LLM integration, drag and drop builder, business automation, artificial intelligence, workflow management" />
+    <meta name="author" content="Haresh Kurade" />
+    <meta name="robots" content="index, follow" />
+    
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://flowen.netlify.app/" />
+    <meta property="og:title" content="FlowEn - AI-Powered Workflow Automation Platform" />
+    <meta property="og:description" content="Build intelligent workflows with drag-and-drop interface. Integrate LLM agents, RAG, and smart triggers to automate your business processes with AI." />
+    <meta property="og:image" content="/Flowen_S.png" />
+    <meta property="og:site_name" content="FlowEn" />
+    
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://flowen.netlify.app/" />
+    <meta property="twitter:title" content="FlowEn - AI-Powered Workflow Automation Platform" />
+    <meta property="twitter:description" content="Build intelligent workflows with drag-and-drop interface. Integrate LLM agents, RAG, and smart triggers to automate your business processes with AI." />
+    <meta property="twitter:image" content="/Flowen_S.png" />
+    <meta property="twitter:creator" content="@hareshkurade" />
+    
+    <link rel="icon" type="image/png" href="/Flowen_S.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/Flowen_S.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/Flowen_S.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/Flowen_S.png" />
+    
+    <meta name="theme-color" content="#1E2A78" />
+    <meta name="msapplication-TileColor" content="#1E2A78" />
+    <meta name="msapplication-navbutton-color" content="#1E2A78" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    
+    <meta name="referrer" content="origin-when-cross-origin" />
+    <meta name="format-detection" content="telephone=no" />
+    
+    <link rel="preload" href="/src/index.css" as="style" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <link rel="dns-prefetch" href="//accounts.google.com" />
+    <link rel="dns-prefetch" href="//apis.google.com" />
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "FlowEn",
+      "description": "AI-Powered Workflow Automation Platform for building intelligent business processes",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "creator": {
+        "@type": "Person",
+        "name": "Haresh Kurade",
+        "url": "https://hareshkurade.netlify.app"
+      }
+    }
+    </script>
+  </head>
+  
+  <body>
+    <div id="loading-spinner" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999;">
+      <div style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #1E2A78; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+    </div>
+    
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+    
+    <script>
+      window.addEventListener('load', function() {
+        const spinner = document.getElementById('loading-spinner');
+        if (spinner) {
+          spinner.style.display = 'none';
+        }
+      });
+    </script>
+    
+    <style>
+      @keyframes spin {
+        0% { transform: translate(-50%, -50%) rotate(0deg); }
+        100% { transform: translate(-50%, -50%) rotate(360deg); }
+      }
+    </style>
+    
+    <noscript>
+      <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
+        <h1>JavaScript Required</h1>
+        <p>FlowEn requires JavaScript to function properly. Please enable JavaScript in your browser settings.</p>
+      </div>
+    </noscript>
+  </body>
+</html>
+
+
+<!-- <!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/Flowen_S.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FlowEn</title>
@@ -10,4 +116,6 @@
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
-</html>
+</html> -->
+
+
