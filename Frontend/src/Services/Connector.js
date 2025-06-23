@@ -18,7 +18,7 @@ export const apiConnector = (method, url, bodyData, headers, params) => {
   // No need to handle tokens manually - they're in HTTP-only cookies
   headers = headers || {};
   
-  console.log('Making request with HTTP-only cookies');
+  // console.log('Making request with HTTP-only cookies');
   return axiosInstance({
     method,
     url,
