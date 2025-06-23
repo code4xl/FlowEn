@@ -4,7 +4,7 @@ import OtpInput from 'react-otp-input';
 import { useDispatch, useSelector } from 'react-redux';
 import { ArrowLeft, Timer, Mail, Shield, KeyRound } from 'lucide-react';
 import { selectAccount } from '../../App/DashboardSlice';
-import { verifyOTP, resendOTP, resetPassword } from '../../Services/Repository/userRepo';
+import { verifyOTP, resendOTP, resetPassword } from '../../Services/Repository/UserRepo';
 
 const VerifyEmail = () => {
   const [otp, setOtp] = useState('');
