@@ -1,4 +1,4 @@
-const { supabase } = require("../config/config");
+const { supabase } = require("../Config/config");
 
 const nodesTable = "nodes";
 const workflowsTable = "workflows";

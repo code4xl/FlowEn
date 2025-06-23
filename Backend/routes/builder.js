@@ -1,5 +1,5 @@
 const express = require('express');
-const authMiddleware = require('../middlewares/auth');
+const authMiddleware = require('../Middlewares/auth');
 const { 
   getNodes,
   createWorkflow,
@@ -8,8 +8,8 @@ const {
   deleteWorkflow,
   getUserWorkflows,
   getWorkflowCredits
-} = require('../controllers/builder');
-const { activateWorkflow } = require('../controllers/builder');
+} = require('../Controllers/builder');
+const { activateWorkflow } = require('../Controllers/builder');
 
 const router = express.Router();
 
