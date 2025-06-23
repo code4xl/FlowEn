@@ -9,7 +9,7 @@ const {
   verifyOtp,
   forgotPassword,
   resetPassword
-} = require('../Controllers/auth');
+} = require('../controllers/auth');
 
 const router = express.Router();
 
