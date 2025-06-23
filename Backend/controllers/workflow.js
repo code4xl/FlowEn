@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const db = require("../Config/db.js");
+const db = require("../config/db.js");
 const createWorkFlow = asyncHandler(async (req, res) => {
     try{
         console.log("Entered into createworkflow.");

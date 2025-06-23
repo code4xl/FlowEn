@@ -1,4 +1,4 @@
-const builderService = require('../Services/builder');
+const builderService = require('../services/builder');
 
 const getNodes = async (req, res) => {
   try {
