@@ -1,7 +1,7 @@
 const { supabase } = require("../config/config.js");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
-const emailTemplate = require("./Mail/mail/templates/EmailVerificationTemplate.js");
+const emailTemplate = require("./Mail/Mail/Templates/EmailVerificationTemplate.js");
 const mailSender = require("./mail/mailSender.js");
 const { DateTime } = require("luxon");
 
