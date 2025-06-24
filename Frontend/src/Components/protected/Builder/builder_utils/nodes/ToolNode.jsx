@@ -1,10 +1,26 @@
-import React, { memo, useState } from "react";
+import React, { memo, useState, useEffect } from "react";
 import { Handle, Position } from "@xyflow/react";
-import { Puzzle, Copy, ChevronDown } from "lucide-react";
+import { Puzzle, Copy, ChevronDown, Mail, CheckCircle } from "lucide-react";
+import GmailConnectionModal from "../nodeAuths/GmailConnectionModal";
 
 const ToolNode = ({ id, data, isConnectable, onCopyApiKeyToAllToolNodes }) => {
   const [showDropdown, setShowDropdown] = useState(null);
   const isReadOnly = data?.readOnly || false;
+  const [showGmailModal, setShowGmailModal] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState({});
+  const [selectedTool, setSelectedTool] = useState(data?.tool || null);
+
+  useEffect(() => {
+    // Initialize connection status from existing data
+    if (data.connections) {
+      const newConnectionStatus = {};
+      Object.keys(data.connections).forEach((service) => {
+        newConnectionStatus[service] =
+          data.connections[service]?.connected || false;
+      });
+      setConnectionStatus(newConnectionStatus);
+    }
+  }, [data.connections]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -445,6 +461,41 @@ const ToolNode = ({ id, data, isConnectable, onCopyApiKeyToAllToolNodes }) => {
     }
   };
 
+  const handleConnectionSuccess = (nodeId, connectionData) => {
+    // Update the node data with connection info
+    const updatedData = {
+      ...data,
+      connections: {
+        ...data.connections,
+        [connectionData.service]: connectionData,
+      },
+    };
+
+    // Update the node data in your workflow state
+    if (data.onNodeDataChange) {
+      data.onNodeDataChange(nodeId, updatedData); // ✅ Use data.onNodeDataChange
+    }
+
+    // Update local connection status
+    setConnectionStatus((prev) => ({
+      ...prev,
+      [connectionData.service]: connectionData.connected,
+    }));
+
+    setShowGmailModal(false);
+  };
+
+  const handleConnectService = (service) => {
+    switch (service) {
+      case "gmail":
+        setShowGmailModal(true);
+        break;
+      // Add other services later
+      default:
+        break;
+    }
+  };
+
   return (
     <div
       style={{
@@ -642,19 +693,106 @@ const ToolNode = ({ id, data, isConnectable, onCopyApiKeyToAllToolNodes }) => {
             renderField(field, index)
           )
         )}
-      </div>
-      {/* <div
-        style={{
-          padding: "0.75rem",
-          display: "flex",
-          flexDirection: "column",
-          gap: "0.5rem",
-        }}
-      >
-        {data.template?.required?.map((field, index) =>
-          renderField(field, index)
+        {/* {console.log('🎯 Gmail condition check:', data.selectedTool === "gmail")} */}
+        {data.selectedTool === "Gmail" && (
+          <div style={{ marginTop: "0.75rem" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "0.75rem",
+                background: "var(--bg-secondary)",
+                borderRadius: "0.5rem",
+                marginBottom: "0.5rem",
+              }}
+            >
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+              >
+                <Mail
+                  style={{
+                    width: "1.25rem",
+                    height: "1.25rem",
+                    color: "#dc2626",
+                  }}
+                />
+                <span
+                  style={{ fontWeight: "500", color: "var(--text-primary)" }}
+                >
+                  Gmail
+                </span>
+              </div>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+              >
+                {connectionStatus.gmail ? (
+                  <>
+                    <CheckCircle
+                      style={{
+                        width: "1rem",
+                        height: "1rem",
+                        color: "#16a34a",
+                      }}
+                    />
+                    <span style={{ fontSize: "0.875rem", color: "#16a34a" }}>
+                      Connected
+                    </span>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => handleConnectService("gmail")}
+                    style={{
+                      padding: "0.25rem 0.75rem",
+                      background: "var(--button-bg)",
+                      color: "var(--button-text)",
+                      fontSize: "0.875rem",
+                      borderRadius: "0.375rem",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                    className="hover:bg-[var(--button-hover)] transition-colors"
+                  >
+                    Connect
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {connectionStatus.gmail && data.connections?.gmail && (
+              <div
+                style={{
+                  padding: "0.75rem",
+                  background: "rgba(34, 197, 94, 0.1)",
+                  borderRadius: "0.5rem",
+                  border: "1px solid rgba(34, 197, 94, 0.3)",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                <p style={{ fontSize: "0.875rem", color: "#16a34a" }}>
+                  Connected as: {data.connections.gmail.user_email}
+                </p>
+                <p
+                  style={{
+                    fontSize: "0.75rem",
+                    color: "#16a34a",
+                    marginTop: "0.25rem",
+                  }}
+                >
+                  Permissions: {data.connections.gmail.permissions?.join(", ")}
+                </p>
+              </div>
+            )}
+
+            <GmailConnectionModal
+              isOpen={showGmailModal}
+              onClose={() => setShowGmailModal(false)}
+              onSuccess={handleConnectionSuccess}
+              nodeId={id}
+            />
+          </div>
         )}
-      </div> */}
+      </div>
       <Handle
         type="target"
         position={Position.Left}

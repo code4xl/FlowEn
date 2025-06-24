@@ -797,11 +797,11 @@ const Builder = () => {
           </ReactFlow>
 
           {/* Run Button */}
-          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-10">
+          <div className="fixed bottom-1 right-2 z-10">
             <button
               onClick={handleRunWorkflow}
               disabled={isAgentRunning}
-              className="px-6 py-3 text-base font-medium rounded-lg shadow-md transition-all duration-200 flex items-center justify-center gap-2 bg-[var(--button-bg)] text-[var(--button-text)] hover:bg-[var(--button-hover)] disabled:opacity-60 disabled:cursor-not-allowed border border-[var(--border-color)]"
+              className="px-3 py-3 text-base font-medium rounded-full shadow-md transition-all duration-200 flex items-center justify-center gap-2 bg-[var(--button-bg)] text-[var(--button-text)] hover:bg-[var(--button-hover)] disabled:opacity-60 disabled:cursor-not-allowed border border-[var(--border-color)]"
               title="Run Workflow"
             >
               {isAgentRunning ? (
@@ -810,7 +810,10 @@ const Builder = () => {
                   <span>Running...</span>
                 </>
               ) : (
-                <span>Run Workflow</span>
+                <>
+                  <Zap size={20} />
+                  {/* <span>Run Workflow</span>                 */}
+                </>
               )}
             </button>
           </div>

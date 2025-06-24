@@ -27,6 +27,7 @@ import {
 } from "../../../Services/Repository/BuilderRepo";
 import PreviewModal from "./vwf_utils/PreviewModal";
 import toast from "react-hot-toast";
+import { setDFeature } from "../../../App/DashboardSlice";
 
 const ViewWorkflow = () => {
   const [workflows, setWorkflows] = useState([]);
@@ -111,6 +112,7 @@ const ViewWorkflow = () => {
 
   // Handle workflow edit
   const handleEdit = async (workflowId) => {
+    dispatch(setDFeature({ dashboardFeature: "CreateWorkflow" }));
     navigate(`/create?edit=${workflowId}`);
   };
 
@@ -312,7 +314,11 @@ const ViewWorkflow = () => {
       <div
         className={`
         flex gap-2
-        ${viewMode === "list" ? "flex-row" : "flex-wrap items-center justify-end"}
+        ${
+          viewMode === "list"
+            ? "flex-row"
+            : "flex-wrap items-center justify-end"
+        }
       `}
       >
         {/* Execute Button */}
@@ -417,7 +423,10 @@ const ViewWorkflow = () => {
               </p>
             </div>
             <button
-              onClick={() => navigate("/create")}
+              onClick={() => {
+                dispatch(setDFeature({ dashboardFeature: "CreateWorkflow" }));
+                navigate("/create");
+              }}
               className="px-4 py-2 bg-[var(--button-bg)] text-[var(--button-text)] rounded-lg hover:bg-[var(--button-hover)] transition-colors flex items-center gap-2"
             >
               <Plus size={18} />
