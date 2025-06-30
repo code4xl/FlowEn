@@ -54,7 +54,7 @@ import {
   createWorkflow,
   updateWorkflow,
 } from "../../../Services/Repository/BuilderRepo";
-import { selectTheme } from "../../../App/DashboardSlice";
+import { selectTheme, setDFeature } from "../../../App/DashboardSlice";
 
 const Builder = () => {
   // Helper function to create unique IDs
@@ -144,6 +144,9 @@ const Builder = () => {
   // Node data change handler
   const onNodeDataChange = useCallback(
     (id, newData) => {
+      // console.log('🏗️ Builder: onNodeDataChange called');
+      // console.log('🎯 Node ID:', id);
+      // console.log('📦 New data:', newData);
       setNodes((nds) =>
         nds.map((node) =>
           node.id === id
@@ -151,6 +154,8 @@ const Builder = () => {
             : node
         )
       );
+      // const updatedNode = updatedNodes.find(n => n.id === id);
+      // console.log('📝 Updated node in workflow:', updatedNode);
     },
     [setNodes]
   );
@@ -359,6 +364,13 @@ const Builder = () => {
         cleanData.label = node.data.label;
         cleanData.nodeId = template?.node_id; // Reference to template
         cleanData.nodeType = template?.node_component_name;
+
+        if (node.data.connections) {
+          cleanData.connections = node.data.connections;
+        }
+        if (node.data.execution_metadata) {
+          cleanData.execution_metadata = node.data.execution_metadata;
+        }
         
         return {
           id: node.id,
@@ -376,13 +388,14 @@ const Builder = () => {
         type: edge.type
       }))
     };
+    console.log(workflowData)
 
     await dispatch(createWorkflow(
       workflowName,
       'Workflow created using builder',
       calculateCredits(),
       workflowData
-    ));
+    )); //Haresh Uncomment this after testing.
   } catch (error) {
     console.error('Failed to save workflow:', error);
   }
@@ -571,7 +584,7 @@ const Builder = () => {
       <header className="h-16 flex items-center justify-between px-6 shrink-0 bg-[var(--bg-secondary)] border-b border-[var(--border-color)]">
         <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate("/dashboard")}
+            onClick={() => {dispatch(setDFeature({ dashboardFeature: "Home" })); navigate("/dashboard")}}
             className="p-1.5 rounded-md transition-all duration-200 hover:bg-[var(--highlight-color)] hover:scale-105 text-[var(--text-primary)]"
             title="Back to Dashboard"
           >
