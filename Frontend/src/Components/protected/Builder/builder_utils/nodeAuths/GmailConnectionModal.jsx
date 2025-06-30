@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Mail, Shield, CheckCircle, AlertCircle } from 'lucide-react';
-import { GmailAuthService } from '../../../../../services/nodeAuths/gmailAuthService';
+import { GmailAuthService } from '../../../../../Services/nodeAuths/gmailAuthService';
 
 const GmailConnectionModal = ({ isOpen, onClose, onSuccess, nodeId }) => {
   const [isConnecting, setIsConnecting] = useState(false);
