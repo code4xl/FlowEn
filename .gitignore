@@ -27,3 +27,57 @@ appsettings.js
 *.sw?
 
 FrontendOld/
+
+
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*.so
+
+# Environment variables
+.env
+
+# Python virtual environment
+venv/
+ENV/
+env/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Byte-compiled files
+*.pyo
+*.pyc
+*.pyd
+
+# Uvicorn logs (if any)
+uvicorn*.log
+
+# pytest cache
+.pytest_cache/
+
+# Mypy cache
+.mypy_cache/
+
+# Coverage reports
+htmlcov/
+.coverage
+coverage.xml
+
+# PyCharm project files
+*.iml
+
+# Jupyter notebooks (optional)
+.ipynb_checkpoints/
+
+# VS Code settings (optional if personal)
+*.code-workspace
