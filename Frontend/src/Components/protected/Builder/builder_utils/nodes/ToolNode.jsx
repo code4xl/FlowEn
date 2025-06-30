@@ -40,6 +40,7 @@ const ToolNode = ({ id, data, isConnectable, onCopyApiKeyToAllToolNodes }) => {
     }
 
     if (data.onNodeDataChange) {
+      // console.log("From ToolNode handleInputChange:", id, newData);
       data.onNodeDataChange(id, newData);
     }
   };
@@ -463,17 +464,34 @@ const ToolNode = ({ id, data, isConnectable, onCopyApiKeyToAllToolNodes }) => {
 
   const handleConnectionSuccess = (nodeId, connectionData) => {
     // Update the node data with connection info
+    // console.log("🎉 ToolNode: Connection success callback triggered");
+    // console.log("📦 Connection data received:", connectionData);
+    // console.log("🔍 Current node data before update:", data);
+
     const updatedData = {
       ...data,
       connections: {
         ...data.connections,
         [connectionData.service]: connectionData,
       },
+      execution_metadata: {
+        ...data.execution_metadata,
+        requires_auth: true,
+        auth_services: [
+          ...(data.execution_metadata?.auth_services || []),
+          connectionData.service,
+        ],
+        last_token_check: new Date().toISOString(),
+      },
     };
+    // console.log('📝 Updated node data to save:', updatedData);
 
     // Update the node data in your workflow state
     if (data.onNodeDataChange) {
+      // console.log('✅ Calling onNodeDataChange');
       data.onNodeDataChange(nodeId, updatedData); // ✅ Use data.onNodeDataChange
+    }else{
+      console.error('❌ data.onNodeDataChange not available!');
     }
 
     // Update local connection status
