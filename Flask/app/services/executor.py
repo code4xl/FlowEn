@@ -34,10 +34,10 @@ async def execute_workflow(workflow):
     return node_results
 
 async def execute_tool_node(node, input_data):
-    from services.gmail import fetch_emails
+    from app.services.gmail import fetch_emails
     if node['data']['selectedTool'] == 'Gmail' and node['data']['toolActions'] == 'fetch_emails':
         return await fetch_emails(node['data']['connections']['gmail'], input_data)
 
 async def execute_llm_node(node, input_data):
-    from services.llm import call_llm
+    from app.services.llm import call_llm
     return await call_llm(node['data'], input_data)

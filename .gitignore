@@ -81,3 +81,5 @@ coverage.xml
 
 # VS Code settings (optional if personal)
 *.code-workspace
+
+try.json
