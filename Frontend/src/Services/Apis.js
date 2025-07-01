@@ -1,5 +1,6 @@
 //All the API endpoints will be declared here and then this will be used in entire frontend to access the endpoints...
 const BaseURL = import.meta.env.VITE_API_BASE_URL;
+const FlaskURL = import.meta.env.VITE_FLASK_BASE_URL;
 
 export const authEndpoints = {
   LOGIN_API: BaseURL + 'auth/login',
@@ -37,6 +38,10 @@ export const builderEndpoints = {
   ACTIVATE_WORKFLOW: { e: BaseURL + 'builder/workflow/activate', t: 'PUT' }, //param id
   GET_USER_WORKFLOWS: { e: BaseURL + 'builder/workflows', t: 'GET' },
   GET_WORKFLOW_CREDITS: { e: BaseURL + 'builder/workflow/credits', t: 'GET' }, //param id
+}
+
+export const executeEndpoints = {
+  EXECUTE_WF: { e: FlaskURL + 'workflow/execute', t: 'POST'}
 }
 
 export const uploadEndPoints = {
