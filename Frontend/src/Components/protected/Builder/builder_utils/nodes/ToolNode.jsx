@@ -807,6 +807,7 @@ const ToolNode = ({ id, data, isConnectable, onCopyApiKeyToAllToolNodes }) => {
               onClose={() => setShowGmailModal(false)}
               onSuccess={handleConnectionSuccess}
               nodeId={id}
+              workflowState={data.workflowState}
             />
           </div>
         )}

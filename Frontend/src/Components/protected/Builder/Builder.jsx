@@ -55,6 +55,7 @@ import {
   updateWorkflow,
 } from "../../../Services/Repository/BuilderRepo";
 import { selectTheme, setDFeature } from "../../../App/DashboardSlice";
+import { GmailAuthService } from "../../../Services/nodeAuths/gmailAuthService";
 
 const Builder = () => {
   // Helper function to create unique IDs
@@ -75,6 +76,7 @@ const Builder = () => {
   const [editingName, setEditingName] = useState(false);
   const [loading, setLoading] = useState(true);
   const [nodeTemplates, setNodeTemplates] = useState([]);
+  const [authService] = useState(new GmailAuthService());
 
   const fileInputRef = useRef(null);
   const dispatch = useDispatch();
@@ -125,6 +127,77 @@ const Builder = () => {
     return defaultData;
   };
 
+  useEffect(() => {
+    const handleOAuthCallback = async () => {
+      try {
+        const result = await authService.processOAuthCallback();
+        
+        if (result) {
+          const { authData, workflowContext } = result;
+          
+          console.log('🎉 OAuth callback successful!');
+          console.log('🔄 Restoring workflow...');
+          
+          // Restore workflow state
+          setNodes(workflowContext.workflowState.nodes || []);
+          setEdges(workflowContext.workflowState.edges || []);
+          setWorkflowName(workflowContext.workflowState.workflowName || 'Untitled Workflow');
+          
+          // Update the specific node with credentials
+          const nodeId = workflowContext.nodeId;
+          
+          const updatedNodeData = {
+            connections: {
+              gmail: {
+                service: 'gmail',
+                provider: 'google',
+                connected: true,
+                
+                credentials: {
+                  access_token: authData.access_token,
+                  refresh_token: authData.refresh_token,
+                  token_type: authData.token_type,
+                  client_id: authData.client_id,
+                  client_secret: authData.client_secret,
+                  expires_at: authData.expires_at,
+                  scope: authData.scope
+                },
+                
+                user_email: authData.user_email,
+                user_name: authData.user_name,
+                user_id: authData.user_id,
+                permissions: authData.permissions,
+                connected_at: authData.authenticated_at,
+                
+                execution_context: {
+                  base_url: 'https://gmail.googleapis.com/gmail/v1',
+                  auth_header: `${authData.token_type} ${authData.access_token}`,
+                  user_id: 'me'
+                }
+              }
+            },
+            execution_metadata: {
+              requires_auth: true,
+              auth_services: ['gmail'],
+              last_token_check: new Date().toISOString()
+            }
+          };
+          
+          // Use setTimeout to ensure nodes are loaded before updating
+          setTimeout(() => {
+            onNodeDataChange(nodeId, updatedNodeData);
+            console.log('✅ Node updated with Gmail credentials!');
+          }, 100);
+        }
+        
+      } catch (error) {
+        console.error('❌ OAuth callback error:', error);
+      }
+    };
+
+    handleOAuthCallback();
+  }, []);
+
   // Load node templates on component mount
   useEffect(() => {
     const loadNodeTemplates = async () => {
@@ -140,6 +213,17 @@ const Builder = () => {
 
     loadNodeTemplates();
   }, [dispatch]);
+
+  useEffect(() => {
+    // Check if we're returning from OAuth callback
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    const error = urlParams.get('error');
+    
+    if (code || error) {
+      handleOAuthCallback(code, error);
+    }
+  }, []);
 
   // Node data change handler
   const onNodeDataChange = useCallback(
@@ -171,14 +255,14 @@ const Builder = () => {
         <LLMNode {...props} data={{ ...props.data, onNodeDataChange }} />
       ),
       toolNode: (props) => (
-        <ToolNode {...props} data={{ ...props.data, onNodeDataChange }} />
+        <ToolNode {...props} data={{ ...props.data, onNodeDataChange, workflowState: { nodes, edges, workflowName } }} />
       ),
       agentNode: (props) => (
         <AgentNode {...props} data={{ ...props.data, onNodeDataChange }} />
       ),
       patternMeta: PatternMetaNode,
     }),
-    [onNodeDataChange]
+    [onNodeDataChange, nodes, edges, workflowName]
   );
 
   // Define edge types
@@ -260,6 +344,78 @@ const Builder = () => {
       item.label.toLowerCase().includes(search.toLowerCase()) ||
       item.description.toLowerCase().includes(search.toLowerCase())
   );
+
+  
+
+  const handleOAuthCallback = async (code, error) => {
+    const authService = new GmailAuthService();
+    
+    try {
+      // Handle the OAuth callback
+      const authData = await authService.handleCallback();
+      
+      // Get the node ID that initiated the auth
+      const nodeId = localStorage.getItem('oauth_node_id');
+      const returnUrl = localStorage.getItem('oauth_return_url');
+      
+      if (nodeId) {
+        // Update the specific node with credentials
+        const updatedNodeData = {
+          connections: {
+            gmail: {
+              service: 'gmail',
+              provider: 'google',
+              connected: true,
+              
+              credentials: {
+                access_token: authData.access_token,
+                refresh_token: authData.refresh_token,
+                token_type: authData.token_type,
+                client_id: authData.client_id,
+                client_secret: authData.client_secret,
+                expires_at: authData.expires_at,
+                scope: authData.scope
+              },
+              
+              user_email: authData.user_email,
+              user_name: authData.user_name,
+              user_id: authData.user_id,
+              permissions: authData.permissions,
+              connected_at: authData.authenticated_at,
+              
+              execution_context: {
+                base_url: 'https://gmail.googleapis.com/gmail/v1',
+                auth_header: `${authData.token_type} ${authData.access_token}`,
+                user_id: 'me'
+              }
+            }
+          },
+          execution_metadata: {
+            requires_auth: true,
+            auth_services: ['gmail'],
+            last_token_check: new Date().toISOString()
+          }
+        };
+        
+        // Update the node
+        onNodeDataChange(nodeId, updatedNodeData);
+        
+        // Clean up
+        localStorage.removeItem('oauth_node_id');
+        localStorage.removeItem('oauth_return_url');
+      }
+      
+      // Clean URL and redirect back
+      window.history.replaceState({}, document.title, returnUrl || '/create');
+      
+      console.log('🎉 OAuth callback handled successfully!');
+      
+    } catch (error) {
+      console.error('❌ OAuth callback error:', error);
+      // Clean URL anyway
+      window.history.replaceState({}, document.title, '/create');
+    }
+  };
 
   // Drag and drop handlers
   const onDragOver = useCallback((event) => {
