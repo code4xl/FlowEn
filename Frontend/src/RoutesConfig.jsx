@@ -11,6 +11,7 @@ import Dashboard from './Components/protected/Dashboard/Dashboard';
 import Builder from './Components/protected/Builder/Builder';
 import ExecuteWorkflow from './Components/protected/ExecuteWF/ExecuteWorkflow';
 import ViewWorkflow from './Components/protected/ViewWF/ViewWorkflow';
+import Trigger from './Components/protected/Trigger/Trigger';
 
 const RoutesConfig = () => {
   const isLoggedIn = useSelector(isUserLoggedIn);
@@ -50,6 +51,7 @@ const RoutesConfig = () => {
             <Route path="/create" element={<Builder />} />
             <Route path="/execute" element={<ExecuteWorkflow />} />
             <Route path="/view" element={<ViewWorkflow />} />
+            <Route path="/trigger" element={<Trigger />} />
           </Routes>
         </div>
       </div>

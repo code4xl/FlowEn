@@ -1,4 +1,4 @@
-import { Activity, HomeIcon, Network, Workflow } from 'lucide-react';
+import { Activity, AlarmClock, HomeIcon, Network, Workflow } from 'lucide-react';
 
 const features = [
   {
@@ -20,11 +20,17 @@ const features = [
     route: '/view',
   },
   {
+    featureName: 'TriggerWorkflow',
+    displayName: 'Trigger',
+    logoUsed: AlarmClock,
+    route: '/trigger',
+  },
+  {
     featureName: 'ExecuteWorkflow',
     displayName: 'Execute',
     logoUsed: Activity,
     route: '/execute',
-  },
+  },  
 ];
 
 export { features };
