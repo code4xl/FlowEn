@@ -102,7 +102,7 @@ const createTrigger = async (req, res) => {
 
     const trigger = await triggersService.createTrigger(triggerData, userId);
     
-    res.status(201).json({
+    res.status(200).json({
       success: true,
       message: 'Trigger created successfully',
       trigger

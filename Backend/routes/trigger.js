@@ -23,7 +23,7 @@ router.get('/:trigger_id', getTriggerById);
 router.get('/workflow/:workflow_id', getTriggerByWorkflow);
 router.post('/', createTrigger);
 router.put('/:trigger_id', updateTrigger);
-router.patch('/:trigger_id/toggle', toggleTriggerStatus);
+router.patch('/toggle/:trigger_id', toggleTriggerStatus);
 router.delete('/:trigger_id', deleteTrigger);
 
 module.exports = router;
