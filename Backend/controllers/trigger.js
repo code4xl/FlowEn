@@ -3,9 +3,15 @@ const triggersService = require('../Services/trigger');
 const getAllTriggers = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { workflow_id } = req.query;
+    const { workflow_id, active_only } = req.query;
     
-    const triggers = await triggersService.getAllTriggers(userId, workflow_id);
+    let triggers;
+    if (active_only === 'true') {
+      triggers = await triggersService.getActiveTriggers(userId);
+    } else {
+      triggers = await triggersService.getAllTriggers(userId, workflow_id);
+    }
+    
     res.status(200).json(triggers);
   } catch (error) {
     console.error('Error in getAllTriggers controller:', error);
@@ -154,11 +160,68 @@ const getAvailableWorkflows = async (req, res) => {
   }
 };
 
+const toggleTriggerStatus = async (req, res) => {
+  try {
+    const { trigger_id } = req.params;
+    const userId = req.user.id;
+    
+    if (!trigger_id || isNaN(trigger_id)) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Valid trigger ID is required' 
+      });
+    }
+
+    const result = await triggersService.toggleTriggerStatus(trigger_id, userId);
+    
+    res.status(200).json({
+      success: true,
+      message: `Trigger ${result.status_changed_to}`,
+      is_active: result.is_active
+    });
+  } catch (error) {
+    console.error('Error in toggleTriggerStatus controller:', error);
+    res.status(400).json({ 
+      success: false, 
+      message: error.message 
+    });
+  }
+};
+
+const deleteTrigger = async (req, res) => {
+  try {
+    const { trigger_id } = req.params;
+    const userId = req.user.id;
+    
+    if (!trigger_id || isNaN(trigger_id)) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Valid trigger ID is required' 
+      });
+    }
+
+    await triggersService.deleteTrigger(trigger_id, userId);
+    
+    res.status(200).json({
+      success: true,
+      message: 'Trigger deleted successfully'
+    });
+  } catch (error) {
+    console.error('Error in deleteTrigger controller:', error);
+    res.status(400).json({ 
+      success: false, 
+      message: error.message 
+    });
+  }
+};
+
 module.exports = { 
   getAllTriggers,
   getTriggerById,
   getTriggerByWorkflow,
   createTrigger,
   updateTrigger,
-  getAvailableWorkflows
+  getAvailableWorkflows,
+  toggleTriggerStatus,
+  deleteTrigger
 };
