@@ -409,10 +409,10 @@ const ViewWorkflow = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] p-6">
+    <div className="h-[calc(100vh-5rem)] bg-[var(--bg-primary)] p-2">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-8 sticky top-[10%] z-10 bg-[var(--bg-primary)] pt-2 pb-1">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <div>
               <h1 className="text-3xl font-bold text-[var(--text-primary)] mb-2">
