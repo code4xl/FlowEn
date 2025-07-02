@@ -7,6 +7,7 @@ const authRoutes = require('./routes/auth');
 const accountRoutes = require('./routes/account');
 const uploadRoutes = require('./routes/upload');
 const builderRoutes = require('./routes/builder');
+const triggerRouter = require('./routes/trigger');
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/account', accountRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/builder', builderRoutes);
+app.use('/api/triggers', triggerRouter);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
