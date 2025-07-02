@@ -44,6 +44,17 @@ export const executeEndpoints = {
   EXECUTE_WF: { e: FlaskURL + 'workflow/execute', t: 'POST'}
 }
 
+export const triggerEndpoints = {
+  GET_ALL : { e: BaseURL + 'triggers', t: 'GET'},
+  GET_SPECIFIC : { e: BaseURL + 'triggers', t: 'GET'}, //param trigger_id
+  GET_FOR_WF : { e: BaseURL + 'triggers/workflow', t: 'GET'}, // workflow_id
+  CREATE_TRIGGER : { e: BaseURL + 'triggers', t: 'POST'},
+  UPDATE_TRIGGER : { e: BaseURL + 'triggers', t: 'PUT'}, //param trigger_id
+  GET_WF_WITHOUT_TRIGGERS : { e: BaseURL + 'triggers/available-workflows', t: 'GET'}, 
+  TOGGLE_TRIGGER : { e: BaseURL + 'triggers/toggle', t: 'PATCH'}, //param trigger_id
+  HARD_DELETE : { e: BaseURL + 'triggers', t: 'DELETE'}, //param trigger_id
+}
+
 export const uploadEndPoints = {
   UPLOAD: BaseURL + 'upload/',
 };
