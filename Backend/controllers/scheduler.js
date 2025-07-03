@@ -55,7 +55,7 @@ const manualTrigger = async (req, res) => {
       .single();
 
     if (error || !trigger) {
-      return res.status(404).json({
+      return res.status(403).json({
         success: false,
         message: 'Workflow or trigger not found'
       });
