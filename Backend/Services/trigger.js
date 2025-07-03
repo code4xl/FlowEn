@@ -1,4 +1,5 @@
 const { supabase } = require("../config/config");
+const workflowScheduler = require('./scheduler');
 
 const triggersTable = "trigger_schedule";
 const workflowsTable = "workflows";
@@ -237,6 +238,11 @@ const createTrigger = async (triggerData, userId) => {
       .single();
 
     if (error) throw error;
+    // Add to scheduler if it's initialized
+        if (workflowScheduler.getStatus().isInitialized) {
+          await workflowScheduler.addTrigger(data.ts_id);
+        }
+
     return data;
   } catch (error) {
     console.error("Error in createTrigger:", error);
@@ -305,6 +311,12 @@ const updateTrigger = async (triggerId, updates, userId) => {
       .single();
 
     if (error) throw error;
+
+    // Update scheduler if it's initialized
+        if (workflowScheduler.getStatus().isInitialized) {
+          await workflowScheduler.updateTrigger(triggerId);
+        }
+
     return data;
   } catch (error) {
     console.error("Error in updateTrigger:", error);
@@ -376,6 +388,16 @@ const toggleTriggerStatus = async (triggerId, userId) => {
       .single();
 
     if (error) throw error;
+
+    // Update scheduler
+        if (workflowScheduler.getStatus().isInitialized) {
+          if (newStatus) {
+            await workflowScheduler.addTrigger(triggerId);
+          } else {
+            workflowScheduler.removeTrigger(triggerId);
+          }
+        }
+
     return { ...data, status_changed_to: newStatus ? "active" : "inactive" };
   } catch (error) {
     console.error("Error in toggleTriggerStatus:", error);
@@ -391,6 +413,11 @@ const deleteTrigger = async (triggerId, userId) => {
     if (!existingTrigger) {
       throw new Error("Trigger not found or access denied");
     }
+
+    // Remove from scheduler first
+        if (workflowScheduler.getStatus().isInitialized) {
+          workflowScheduler.removeTrigger(triggerId);
+        }
 
     const { error } = await supabase
       .from(triggersTable)
