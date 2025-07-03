@@ -21,15 +21,15 @@ const features = [
   },
   {
     featureName: 'TriggerWorkflow',
-    displayName: 'Trigger',
+    displayName: 'Triggers',
     logoUsed: AlarmClock,
     route: '/trigger',
   },
   {
-    featureName: 'ExecuteWorkflow',
-    displayName: 'Execute',
+    featureName: 'WorkflowLogs',
+    displayName: 'Logs',
     logoUsed: Activity,
-    route: '/execute',
+    route: '/logs',
   },  
 ];
 

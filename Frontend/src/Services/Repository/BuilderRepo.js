@@ -203,29 +203,27 @@ export function activateWorkflow(workflowId) {
 }
 
 
-export function getUserWorkflows() {
-  return async (dispatch) => {
-    const loadingToast = toast.loading('Loading your workflows...');
-    try {
-      const response = await apiConnector(
-        GET_USER_WORKFLOWS.t,
-        GET_USER_WORKFLOWS.e
-      );
+export async function getUserWorkflows() {
+  const loadingToast = toast.loading('Loading your workflows...');
+  try {
+    const response = await apiConnector(
+      GET_USER_WORKFLOWS.t,
+      GET_USER_WORKFLOWS.e
+    );
 
-      if (response.status >= 200 && response.status < 300) {
-        toast.success('Workflows loaded successfully');
-        return response.data; // Return the workflows array
-      } else {
-        throw new Error(response.data.message || 'Failed to fetch workflows');
-      }
-    } catch (error) {
-      console.log('Get User Workflows API Error:', error);
-      toast.error(error.response?.data?.message || error.message || 'Failed to load workflows');
-      throw error;
-    } finally {
-      toast.dismiss(loadingToast);
+    if (response.status >= 200 && response.status < 300) {
+      toast.success('Workflows loaded successfully');
+      return response.data; // Return the workflows array
+    } else {
+      throw new Error(response.data.message || 'Failed to fetch workflows');
     }
-  };
+  } catch (error) {
+    console.log('Get User Workflows API Error:', error);
+    toast.error(error.response?.data?.message || error.message || 'Failed to load workflows');
+    throw error;
+  } finally {
+    toast.dismiss(loadingToast);
+  }
 }
 
 
