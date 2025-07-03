@@ -6,9 +6,9 @@ const axios = require("axios");
 const fastApiUrl = process.env.FASTAPI_URL || "http://localhost:8000";
 
 const mailSender = require("./Mail/mailSender");
-const workflowBeforeTemplate = require("./Mail/Mail/Templates/WorkflowBeforeTemplate");
-const workflowSuccessTemplate = require("./Mail/Mail/Templates/WorkflowSuccessTemplate");
-const workflowFailureTemplate = require("./Mail/Mail/Templates/WorkflowFailureTemplate");
+const workflowBeforeTemplate = require("./Mail/mail/templates/WorkflowBeforeTemplate");
+const workflowSuccessTemplate = require("./Mail/mail/templates/WorkflowSuccessTemplate");
+const workflowFailureTemplate = require("./Mail/mail/templates/WorkflowFailureTemplate");
 
 class WorkflowScheduler {
   constructor() {
