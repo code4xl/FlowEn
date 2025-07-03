@@ -98,8 +98,7 @@ export function getTriggerForWorkflow(workflowId) {
 }
 
 // Create new trigger
-export function createTrigger(triggerData, navigate = null) {
-  return async (dispatch) => {
+export async function createTrigger(triggerData, navigate = null) {
     const loadingToast = toast.loading('Creating trigger...');
     try {
       const response = await apiConnector(
@@ -126,12 +125,10 @@ export function createTrigger(triggerData, navigate = null) {
     } finally {
       toast.dismiss(loadingToast);
     }
-  };
 }
 
 // Update existing trigger
-export function updateTrigger(triggerId, triggerData, navigate = null) {
-  return async (dispatch) => {
+export async function updateTrigger(triggerId, triggerData, navigate = null) {
     const loadingToast = toast.loading('Updating trigger...');
     try {
       const response = await apiConnector(
@@ -158,7 +155,6 @@ export function updateTrigger(triggerId, triggerData, navigate = null) {
     } finally {
       toast.dismiss(loadingToast);
     }
-  };
 }
 
 // Get workflows without triggers (for easier trigger creation)

@@ -61,7 +61,7 @@ const PORT = process.env.PORT || 5000;
 
 async function startServer() {
     try {
-        console.log('🚀 Starting ReGenest Server...');
+        console.log('🚀 Starting FlowEn Server...');
         
         // Initialize the workflow scheduler
         await workflowScheduler.initialize();

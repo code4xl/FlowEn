@@ -5,6 +5,11 @@ const axios = require("axios");
 
 const fastApiUrl = process.env.FASTAPI_URL || "http://localhost:8000";
 
+const mailSender = require("./Mail/mailSender");
+const workflowBeforeTemplate = require("./Mail/Mail/Templates/WorkflowBeforeTemplate");
+const workflowSuccessTemplate = require("./Mail/Mail/Templates/WorkflowSuccessTemplate");
+const workflowFailureTemplate = require("./Mail/Mail/Templates/WorkflowFailureTemplate");
+
 class WorkflowScheduler {
   constructor() {
     this.scheduledJobs = new Map(); // Store active cron jobs
@@ -94,7 +99,7 @@ class WorkflowScheduler {
         },
         {
           scheduled: true,
-          timezone: process.env.TIMEZONE || "UTC",
+          timezone: process.env.TIMEZONE || "Asia/Kolkata",
         }
       );
 
@@ -164,7 +169,10 @@ class WorkflowScheduler {
           workflows.created_by,
           "after",
           workflows.name,
-          true
+          true,
+          null,
+          result,
+          `${executionTime}ms`
         );
       }
 
@@ -193,7 +201,9 @@ class WorkflowScheduler {
           "after",
           workflows.name,
           false,
-          errorMessage
+          errorMessage,
+          null,
+          `${executionTime}ms`
         );
       }
     }
@@ -253,12 +263,15 @@ class WorkflowScheduler {
     try {
       //   const fastApiUrl = process.env.FASTAPI_URL || "http://localhost:8000";
       const response = await axios.post(
-        `${fastApiUrl}/workflow/execute`,
+        `${fastApiUrl}workflow/execute`,
         {
-          workflow_id: workflow.wf_id,
-          workflow_data: workflow.data,
-          user_id: workflow.created_by,
+          ...workflow.data,
         },
+        // {
+        //   workflow_id: workflow.wf_id,
+        //   workflow_data: workflow.data,
+        //   user_id: workflow.created_by,
+        // },
         {
           timeout: 300000, // 5 minutes timeout
           headers: {
@@ -310,37 +323,68 @@ class WorkflowScheduler {
     type,
     workflowName,
     success = null,
-    errorMessage = null
+    errorMessage = null,
+    output = null,
+    executionTime = null
   ) {
     try {
-      // Get user email
+      // Get user email and name
       const { data: user, error } = await supabase
         .from("users")
         .select("email, name")
         .eq("u_id", userId)
         .single();
 
-      if (error || !user) return;
+      if (error || !user) {
+        console.warn(`User ${userId} not found for notification`);
+        return;
+      }
 
-      let subject, message;
+      let subject, htmlContent;
+      const currentTime = new Date().toLocaleString("en-US", {
+        timeZone: process.env.TIMEZONE || "UTC",
+        dateStyle: "full",
+        timeStyle: "short",
+      });
 
       if (type === "before") {
-        subject = `Workflow Execution Starting: ${workflowName}`;
-        message = `Your workflow "${workflowName}" is about to execute.`;
-      } else {
+        // Before execution notification
+        subject = `🚀 Workflow Starting: ${workflowName}`;
+        htmlContent = workflowBeforeTemplate(
+          user.name,
+          workflowName,
+          currentTime
+        );
+      } else if (type === "after") {
         if (success) {
-          subject = `Workflow Executed Successfully: ${workflowName}`;
-          message = `Your workflow "${workflowName}" has been executed successfully.`;
+          // Success notification
+          subject = `✅ Workflow Completed: ${workflowName}`;
+          htmlContent = workflowSuccessTemplate(
+            user.name,
+            workflowName,
+            executionTime || "Unknown",
+            output
+          );
         } else {
-          subject = `Workflow Execution Failed: ${workflowName}`;
-          message = `Your workflow "${workflowName}" failed to execute. Error: ${errorMessage}`;
+          // Failure notification
+          subject = `❌ Workflow Failed: ${workflowName}`;
+          htmlContent = workflowFailureTemplate(
+            user.name,
+            workflowName,
+            executionTime || "Unknown",
+            errorMessage
+          );
         }
       }
 
-      // You can implement email notification here using your mailSender
-      console.log(`📧 Notification sent to ${user.email}: ${subject}`);
+      // Send email using your existing mailSender
+      const mailResponse = await mailSender(user.email, subject, htmlContent);
+
+      console.log(`📧 Email notification sent to ${user.email}: ${subject}`);
+      return mailResponse;
     } catch (error) {
-      console.error("Error sending notification:", error);
+      console.error("Error sending email notification:", error);
+      // Don't throw error to prevent breaking workflow execution
     }
   }
 

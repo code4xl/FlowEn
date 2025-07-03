@@ -202,9 +202,9 @@ const Trigger = () => {
 
     try {
       if (selectedTrigger) {
-        await dispatch(updateTrigger(selectedTrigger.ts_id, formData));
+        await updateTrigger(selectedTrigger.ts_id, formData);
       } else {
-        await dispatch(createTrigger(formData));
+        await createTrigger(formData);
       }
       await loadAllTriggers();
       await loadAvailableWorkflows();
