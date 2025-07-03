@@ -945,9 +945,7 @@ const Trigger = () => {
                           ? "bg-[var(--accent-color)] text-white"
                           : "bg-[var(--highlight-color)] text-[var(--text-secondary)] hover:bg-[var(--accent-color)] hover:text-white"
                       }`}
-                      disabled={
-                        !isEditing && selectedTrigger && currentView === "edit"
-                      }
+                      disabled={currentView === "edit" && !isEditing}
                     >
                       Weekly
                     </button>
@@ -974,17 +972,11 @@ const Trigger = () => {
                             ? "bg-[var(--accent-color)] text-white"
                             : "bg-[var(--highlight-color)] text-[var(--text-secondary)] hover:bg-[var(--accent-color)] hover:text-white"
                         } ${
-                          !isEditing &&
-                          selectedTrigger &&
-                          currentView === "edit"
+                          currentView === "edit" && !isEditing
                             ? "cursor-not-allowed opacity-60"
                             : "cursor-pointer"
                         }`}
-                        disabled={
-                          !isEditing &&
-                          selectedTrigger &&
-                          currentView === "edit"
-                        }
+                        disabled={currentView === "edit" && !isEditing}
                       >
                         <div className="text-xs opacity-75">{day.short}</div>
                         <div>{day.name}</div>
@@ -1009,9 +1001,7 @@ const Trigger = () => {
                           time: e.target.value,
                         }))
                       }
-                      disabled={
-                        !isEditing && selectedTrigger && currentView === "edit"
-                      }
+                      disabled={currentView === "edit" && !isEditing}
                       className="px-4 py-3 bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-color)] disabled:opacity-60 disabled:cursor-not-allowed"
                     />
                     <div className="flex items-center gap-2 px-4 py-3 bg-[var(--highlight-color)] rounded-lg">
@@ -1042,11 +1032,7 @@ const Trigger = () => {
                             is_notify_before: e.target.checked,
                           }))
                         }
-                        disabled={
-                          !isEditing &&
-                          selectedTrigger &&
-                          currentView === "edit"
-                        }
+                        disabled={currentView === "edit" && !isEditing}
                         className="w-4 h-4 text-[var(--accent-color)] border-[var(--border-color)] rounded focus:ring-[var(--accent-color)] disabled:opacity-60"
                       />
                       <span className="text-[var(--text-primary)]">
@@ -1063,11 +1049,7 @@ const Trigger = () => {
                             is_notify_after: e.target.checked,
                           }))
                         }
-                        disabled={
-                          !isEditing &&
-                          selectedTrigger &&
-                          currentView === "edit"
-                        }
+                        disabled={currentView === "edit" && !isEditing}
                         className="w-4 h-4 text-[var(--accent-color)] border-[var(--border-color)] rounded focus:ring-[var(--accent-color)] disabled:opacity-60"
                       />
                       <span className="text-[var(--text-primary)]">
@@ -1078,53 +1060,55 @@ const Trigger = () => {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-3">
-                  {selectedTrigger && !isEditing && currentView === "edit" ? (
+                {(isEditing || currentView === "create") && (
+                  <div className="flex flex-col sm:flex-row gap-3">
                     <button
-                      type="button"
-                      onClick={() => setIsEditing(true)}
+                      type="submit"
                       className="flex items-center justify-center gap-2 px-6 py-3 bg-[var(--accent-color)] text-white rounded-lg hover:bg-[var(--button-hover)] transition-colors font-medium"
                     >
-                      <Edit3 className="w-4 h-4" />
-                      Edit Trigger
+                      <Save className="w-4 h-4" />
+                      {selectedTrigger ? "Update Trigger" : "Create Trigger"}
                     </button>
-                  ) : (
-                    <>
-                      <button
-                        type="submit"
-                        className="flex items-center justify-center gap-2 px-6 py-3 bg-[var(--accent-color)] text-white rounded-lg hover:bg-[var(--button-hover)] transition-colors font-medium"
-                      >
-                        <Save className="w-4 h-4" />
-                        {selectedTrigger ? "Update Trigger" : "Create Trigger"}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (selectedTrigger) {
-                            setIsEditing(false);
-                            setFormData({
-                              wf_id: selectedTrigger.wf_id,
-                              schedule_type:
-                                selectedTrigger.schedule_type || "weekly",
-                              days: selectedTrigger.days || [],
-                              time: selectedTrigger.time || "09:00:00",
-                              is_notify_before:
-                                selectedTrigger.is_notify_before ?? true,
-                              is_notify_after:
-                                selectedTrigger.is_notify_after ?? false,
-                            });
-                          } else {
-                            setCurrentView("overview");
-                          }
-                        }}
-                        className="px-6 py-3 bg-[var(--highlight-color)] text-[var(--text-secondary)] rounded-lg hover:bg-[var(--border-color)] transition-colors font-medium"
-                      >
-                        Cancel
-                      </button>
-                    </>
-                  )}
-                </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (selectedTrigger) {
+                          setIsEditing(false);
+                          setFormData({
+                            wf_id: selectedTrigger.wf_id,
+                            schedule_type:
+                              selectedTrigger.schedule_type || "weekly",
+                            days: selectedTrigger.days || [],
+                            time: selectedTrigger.time || "09:00:00",
+                            is_notify_before:
+                              selectedTrigger.is_notify_before ?? true,
+                            is_notify_after:
+                              selectedTrigger.is_notify_after ?? false,
+                          });
+                        } else {
+                          setCurrentView("overview");
+                        }
+                      }}
+                      className="px-6 py-3 bg-[var(--highlight-color)] text-[var(--text-secondary)] rounded-lg hover:bg-[var(--border-color)] transition-colors font-medium"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                )}
               </form>
+            )}
+            {/* Edit button OUTSIDE form */}
+            {selectedTrigger && !isEditing && currentView === "edit" && (
+              <div className="p-6 border-b border-[var(--border-color)]">
+                <button
+                  type="button"
+                  onClick={() => setIsEditing(true)}
+                  className="flex items-center justify-center gap-2 px-6 py-3 bg-[var(--accent-color)] text-white rounded-lg hover:bg-[var(--button-hover)] transition-colors font-medium"
+                >
+                  <Edit3 className="w-4 h-4" />
+                  Edit Trigger
+                </button>
+              </div>
             )}
 
             {/* Info Section */}
