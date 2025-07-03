@@ -24,13 +24,13 @@ export const TIME_RANGES = {
 
 // Days of the week
 export const DAYS_OF_WEEK = [
-  { name: 'Monday', short: 'Mon', index: 0 },
-  { name: 'Tuesday', short: 'Tue', index: 1 },
-  { name: 'Wednesday', short: 'Wed', index: 2 },
-  { name: 'Thursday', short: 'Thu', index: 3 },
-  { name: 'Friday', short: 'Fri', index: 4 },
-  { name: 'Saturday', short: 'Sat', index: 5 },
-  { name: 'Sunday', short: 'Sun', index: 6 }
+    { name: 'Sunday', short: 'Sun', index: 0 },
+  { name: 'Monday', short: 'Mon', index: 1 },
+  { name: 'Tuesday', short: 'Tue', index: 2 },
+  { name: 'Wednesday', short: 'Wed', index: 3 },
+  { name: 'Thursday', short: 'Thu', index: 4 },
+  { name: 'Friday', short: 'Fri', index: 5 },
+  { name: 'Saturday', short: 'Sat', index: 6 },
 ];
 
 /**
