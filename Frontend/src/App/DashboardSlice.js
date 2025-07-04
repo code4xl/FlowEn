@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const localData = JSON.parse(localStorage.getItem('account'));
 const Dstate = JSON.parse(localStorage.getItem('dState'));
 const theme = localStorage.getItem('theme') || 'dark';
+const localCredits = localStorage.getItem('credits');
 const initialState = {
   dashboardMenuState: true,
   dashboardFeature: Dstate ? Dstate : 'Home',
@@ -9,6 +10,7 @@ const initialState = {
   isLoggedIn: localData ? localData.isLoggedIn : false,
   profileData: [],
   theme: theme,
+  credits: localCredits ? localCredits : -1
 };
 
 const DashboardSlice = createSlice({
@@ -31,8 +33,10 @@ const DashboardSlice = createSlice({
     setAccount: (state, action) => {
       state.account = action.payload;
       state.isLoggedIn = true;
+      state.credits = action.payload.credits;
       const temp = { ...state.account, isLoggedIn: state.isLoggedIn };
       localStorage.setItem('account', JSON.stringify(temp));
+      localStorage.setItem('credits', state.credits);
     },
     LogOut: (state, action) => {
       state.account = [];
@@ -52,6 +56,10 @@ const DashboardSlice = createSlice({
       state.theme = action.payload.theme;
       localStorage.setItem('theme', action.payload.theme);
     },
+    setCredits: (state, action) => {
+      state.credits = action.payload.credits;
+      localStorage.setItem('credits', state.credits);
+    },
   },
 });
 
@@ -62,7 +70,8 @@ export const {
   setAccount,
   setAccountAfterRegister,
   LogOut,
-  setTheme
+  setTheme,
+  setCredits
 } = DashboardSlice.actions;
 
 export const dashboardMenuState = (state) => state.dashboard.dashboardMenuState;
@@ -71,5 +80,6 @@ export const isUserLoggedIn = (state) => state.dashboard.isLoggedIn;
 export const selectAccount = (state) => state.dashboard.account;
 export const selectProfileData = (state) => state.dashboard.profileData;
 export const selectTheme = (state) => state.dashboard.theme;
+export const selectCredits = (state) => state.dashboard.credits;
 
 export default DashboardSlice.reducer;

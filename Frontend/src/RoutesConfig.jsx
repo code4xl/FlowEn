@@ -12,6 +12,8 @@ import Builder from './Components/protected/Builder/Builder';
 import Logs from './Components/protected/WFLogs/Logs';
 import ViewWorkflow from './Components/protected/ViewWF/ViewWorkflow';
 import Trigger from './Components/protected/Trigger/Trigger';
+import Profile from './Components/protected/Profile/Profile';
+import AdminPanel from './Components/protected/Admin/AdminPanel';
 
 const RoutesConfig = () => {
   const isLoggedIn = useSelector(isUserLoggedIn);
@@ -52,6 +54,8 @@ const RoutesConfig = () => {
             <Route path="/logs" element={<Logs />} />
             <Route path="/view" element={<ViewWorkflow />} />
             <Route path="/trigger" element={<Trigger />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/admin-panel" element={<AdminPanel />} />
           </Routes>
         </div>
       </div>
