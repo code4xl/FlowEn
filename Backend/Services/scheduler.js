@@ -95,7 +95,7 @@ class WorkflowScheduler {
       const job = cron.schedule(
         cron_expression,
         async () => {
-          await this.executeWorkflow(trigger);
+          await this.executeWorkflow(trigger, true);
         },
         {
           scheduled: true,
@@ -118,7 +118,7 @@ class WorkflowScheduler {
   }
 
   // Execute a workflow
-  async executeWorkflow(trigger) {
+  async executeWorkflow(trigger, is_automatic) {
     const startTime = Date.now();
     const { ts_id, wf_id, workflows, is_notify_before, is_notify_after } =
       trigger;
@@ -160,7 +160,8 @@ class WorkflowScheduler {
         ts_id,
         true,
         "Workflow executed successfully",
-        `${executionTime}ms`
+        `${executionTime}ms`,
+        is_automatic
       );
 
       // Post-execution notification
@@ -298,7 +299,7 @@ class WorkflowScheduler {
   }
 
   //Log Execution
-  async logExecution(workflowId, triggerId, status, remark, executionTime) {
+  async logExecution(workflowId, triggerId, status, remark, executionTime, is_automatic) {
     try {
       const { error } = await supabase.from("trigger_log").insert([
         {
@@ -308,6 +309,7 @@ class WorkflowScheduler {
           remark,
           execution_time: executionTime,
           created_at: new Date().toISOString(),
+          is_automatic
         },
       ]);
 

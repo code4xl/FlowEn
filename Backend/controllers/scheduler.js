@@ -62,7 +62,7 @@ const manualTrigger = async (req, res) => {
     }
 
     // Execute the workflow manually
-    await workflowScheduler.executeWorkflow(trigger);
+    await workflowScheduler.executeWorkflow(trigger, false);
 
     res.status(200).json({
       success: true,
