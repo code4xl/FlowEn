@@ -10,7 +10,7 @@ const getUserById = async (userId) => {
   try {
     const { data, error } = await supabase
       .from(usersTable)
-      .select("u_id, name, email, occupation, credits, is_active, profile_url, created_at")
+      .select("*")
       .eq("u_id", userId)
       .single();
 

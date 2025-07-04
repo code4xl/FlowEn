@@ -197,7 +197,7 @@ const loginUser = async (email, password) => {
     // Fetch user by email
     const { data, error } = await supabase
       .from(usersTable)
-      .select("u_id, name, email, password, e_verified, is_active, profile_url, credits")
+      .select("u_id, name, email, password, e_verified, is_active, profile_url, credits, role")
       .eq("email", email)
       .single();
 
@@ -252,7 +252,8 @@ const loginUser = async (email, password) => {
         name: user.name,
         email: user.email,
         profile_url: user.profile_url,
-        credits: user.credits
+        credits: user.credits,
+        role: user.role,
       }
     };
 
