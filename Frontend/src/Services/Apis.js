@@ -17,13 +17,14 @@ export const authEndpoints = {
 };
 
 export const accountEndpoints = {
-  USER_BY_ID: { e: BaseURL + 'account/user', t: 'GET'},
   CURRENT_USER: { e: BaseURL + 'account/me', t: 'GET' },
-  ALL_USERS: { e: BaseURL + 'account/all', t: 'GET' },
   UPDATE_USER: { e: BaseURL + 'account/update', t: 'PUT' }, //param id
   CHANGE_PASSWORD: { e: BaseURL + 'account/change-password', t: 'POST' },
   DELETE_USER: { e: BaseURL + 'account/delete', t: 'DELETE' }, //param id
   USER_CREDITS: { e: BaseURL + 'account/credits', t: 'GET' }, //param id
+  
+  USER_BY_ID: { e: BaseURL + 'account/user', t: 'GET'},
+  ALL_USERS: { e: BaseURL + 'account/all', t: 'GET' },
   UPDATE_CREDITS: { e: BaseURL + 'account/credits/update', t: 'POST' },
   MANUALLY_VERIFY_EMAIL: { e: BaseURL + 'account/verify-email', t: 'POST' },
   USER_ACTIVITY: { e: BaseURL + 'account/activity', t: 'GET' }, //param id

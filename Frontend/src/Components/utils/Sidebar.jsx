@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   dashboardFeature,
   dashboardMenuState,
+  selectAccount,
   setCloseDMenu,
   setDFeature,
 } from '../../App/DashboardSlice.js';
@@ -30,6 +31,7 @@ const Sidebar = ({ isOpen }) => {
   const [isHovered, setIsHovered] = useState(false);
   const ifDMenuState = useSelector(dashboardMenuState);
   const dashboardFeatures = useSelector(dashboardFeature);
+  const userAccount = useSelector(selectAccount);
 
   const onCartToggler = () => {
     dispatch(setCloseDMenu({ dashboardMenuState: !ifDMenuState }));
@@ -132,7 +134,7 @@ const Sidebar = ({ isOpen }) => {
         {/* Navigation Menu */}
         <div className="py-4 overflow-y-auto scrollbar-hide flex-1 flex flex-col">
           <div className="px-3 space-y-2 overflow-y-auto scrollbar-hide">
-            {features.map((item, index) => (
+            {features.map((item, index) => item.allowedRoles.includes(userAccount.role) && (
               <div
                 key={index}
                 onClick={() => handleNavigation(item)}

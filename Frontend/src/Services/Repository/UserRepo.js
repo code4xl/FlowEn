@@ -176,6 +176,7 @@ export function login(email, password, navigate) {
           uemail: user.email,
           profile_url: user.profile_url,
           credits: user.credits,
+          role: user.role,
         };
         dispatch(setAccount(temp));
         dispatch(setDFeature({ dashboardFeature: 'Home' }));
