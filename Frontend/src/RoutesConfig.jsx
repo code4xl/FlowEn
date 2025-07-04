@@ -9,7 +9,7 @@ import NavBar from './Components/protected/Dashboard/NavBar';
 import Sidebar from './Components/utils/Sidebar';
 import Dashboard from './Components/protected/Dashboard/Dashboard';
 import Builder from './Components/protected/Builder/Builder';
-import ExecuteWorkflow from './Components/protected/ExecuteWF/ExecuteWorkflow';
+import Logs from './Components/protected/WFLogs/Logs';
 import ViewWorkflow from './Components/protected/ViewWF/ViewWorkflow';
 import Trigger from './Components/protected/Trigger/Trigger';
 
@@ -49,7 +49,7 @@ const RoutesConfig = () => {
             <Route path="/" element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/create" element={<Builder />} />
-            <Route path="/execute" element={<ExecuteWorkflow />} />
+            <Route path="/logs" element={<Logs />} />
             <Route path="/view" element={<ViewWorkflow />} />
             <Route path="/trigger" element={<Trigger />} />
           </Routes>

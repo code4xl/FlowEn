@@ -11,6 +11,7 @@ const uploadRoutes = require('./routes/upload');
 const builderRoutes = require('./routes/builder');
 const triggerRouter = require('./routes/trigger');
 const schedulerRoutes = require('./routes/scheduler');
+const keepAlive = require('./Services/keepAlive');
 
 const app = express();
 
@@ -44,9 +45,12 @@ app.get('/', (req, res) => {
     });
 });
 
-// Scheduler status endpoint
-app.get('/scheduler/status', (req, res) => {
-    res.json(workflowScheduler.getStatus());
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'alive', 
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
 });
 
 app.use('/api/auth', authRoutes);
@@ -71,6 +75,7 @@ async function startServer() {
             console.log(`✅ Server running on port ${PORT}`);
             console.log(`📅 Scheduler initialized with ${workflowScheduler.getStatus().activeJobs} active jobs`);
         });
+        keepAlive();
 
         // Graceful shutdown handling
         process.on('SIGTERM', async () => {

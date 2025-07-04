@@ -55,6 +55,13 @@ export const triggerEndpoints = {
   HARD_DELETE : { e: BaseURL + 'triggers', t: 'DELETE'}, //param trigger_id
 }
 
+export const schedulerEndpoints = {
+  GET_SCHEDULER_STATUS: {e: BaseURL + 'scheduler/status', t: 'GET'},
+  GET_DETAIL_LOGS: {e: BaseURL + 'scheduler/logs', t: 'GET'}, //param workflow_id
+  GET_EXECUTION_STATS: {e: BaseURL + 'scheduler/stats', t: 'GET'}, //param workflow_id
+  EXECUTE_WF: {e: BaseURL + 'scheduler/trigger', t: 'POST'}, //param workflow_id
+}
+
 export const uploadEndPoints = {
   UPLOAD: BaseURL + 'upload/',
 };
