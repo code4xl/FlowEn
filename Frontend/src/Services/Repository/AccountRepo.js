@@ -1,6 +1,6 @@
 import { toast } from "react-hot-toast";
 import { apiConnector } from "../Connector";
-import { setAccount, setCredits } from "../../app/DashboardSlice";
+import { setAccount, setCredits } from "../../App/DashboardSlice";
 import { accountEndpoints } from "../Apis";
 
 const {
